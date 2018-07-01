@@ -1,0 +1,80 @@
+<h2 class="mb-3">{{endpoint.name}} Endpoint</h2>
+<!-- Parameter table -->
+<h4>Parameters</h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Parameter</th>
+      <th scope="col">Description</th>
+      <th scope="col">Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let param of endpoint.params">
+      <td scope="row">{{param.param_name}}</td>
+      <td scope="row">{{param.param_desc}}</td>
+      <td scope="row">{{param.required}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Returns table -->
+<h4>Returns</h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Return Value</th>
+      <th scope="col">Type</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let returns of endpoint.returns">
+      <td scope="row">{{returns.return_name}}</td>
+      <td scope="row">{{returns.return_type}}</td>
+      <td scope="row">{{returns.return_desc}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Test Results -->
+
+<div class="d-flex mb-5">
+  <div class="w-100 d-flex flex-column justify-content-between
+  align-items-center mr-3">
+    <div class="w-100">
+      <h4>Example Values</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Parameter</th>
+            <th scope="col">Test Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let param of endpoint.params">
+            <td scope="row">{{param.param_name}}</td>
+            <td scope="row">
+              <div class="form-group mb-0">
+                <input type="text" class="form-control" id="param.param_name" [(ngModel)]="param.example" name="param.param_name">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button (click)="makeQuery()" class="btn btn-primary">Test it!</button>
+  </div>
+  <div class="w-100 ml-3">
+    <h4>Results</h4>
+    <div>
+      <span class="font-weight-bold">Query: </span>
+      <span>{{ query }}</span>
+    </div>
+    <div>
+      <span class="font-weight-bold">Result:</span>
+      <p class="result">{{ result }}</p>
+    </div>
+  </div>
+</div>
