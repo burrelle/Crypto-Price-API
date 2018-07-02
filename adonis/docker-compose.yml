@@ -1,5 +1,9 @@
 version: '3'
 
+networks:
+  net1:
+    driver: bridge
+
 services:
   web:
     image: adonis:latest
@@ -7,16 +11,24 @@ services:
     ports:
       - ${PORT}:${PORT}
     restart: always
+    networks:
+      net1:
+        aliases:
+          - server
     volumes: 
       - ./:/app
-    # depends_on:
-    #   - postgres
+    depends_on:
+      - postgres
       
-  # postgres:
-  #   image: postgres:9.6
-  #   ports:
-  #     - ${DB_PORT}:${DB_PORT}
-  #   environment:
-  #     - POSTGRES_PASSWORD:${DB_PASSWORD}
-  #   volumes:
-  #     - ./postgres-data:/var/lib/postgresql/data
+  postgres:
+    image: postgres:9.6
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - POSTGRES_PASSWORD:${DB_PASSWORD}
+    networks:
+      net1:
+        aliases:
+          - postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
