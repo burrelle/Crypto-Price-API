@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./lib/update-process.ts",
-    "start": "nodemon ./dist/update-process.js",
+    "start": "tsc && nodemon ./dist/update-process.js",
     "prod": "npm run build && npm run start"
   },
   "author": "",
@@ -14,10 +14,12 @@
   "dependencies": {
     "@reactivex/rxjs": "^6.2.1",
     "@types/express": "^4.16.0",
+    "@types/pg": "^7.4.1",
     "body-parser": "^1.18.3",
     "ccxt": "^1.14.301",
     "express": "^4.16.3",
     "nodemon": "^1.17.5",
+    "pg": "^7.4.1",
     "rxjs": "^6.2.1",
     "rxjs-compat": "^6.2.1"
   }
