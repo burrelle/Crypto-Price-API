@@ -9,7 +9,10 @@ CREATE TABLE price (
     price_id serial PRIMARY KEY,
     exchange_pair_id int,
     price float,
-    vol24hr float,
+    bid float,
+    ask float,
+    baseVolume float,
+    quoteVolume float,
     ts int
 );
 
@@ -35,7 +38,11 @@ CREATE TABLE asset (
 -- exchange
 CREATE TABLE exchange (
     exchange_id serial PRIMARY KEY,
-    exchange_name text
+    exchange_name text,
+    countries text[],
+    urls json,
+    markets json,
+    symbols json
 );
 
 
@@ -44,6 +51,8 @@ CREATE TABLE exchange_pair (
     exchange_id int REFERENCES exchange(exchange_id) ON DELETE CASCADE,
     pair_id int REFERENCES pair(pair_id) ON DELETE CASCADE,
     last_price int REFERENCES price(price_id) ON DELETE SET NULL,
+    active boolean,
+    mkt_precision json,
     UNIQUE (exchange_id, pair_id)
 );
 
