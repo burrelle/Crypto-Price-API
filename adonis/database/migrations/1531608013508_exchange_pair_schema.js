@@ -4,38 +4,39 @@ const Schema = use("Schema");
 
 class ExchangePairSchema extends Schema {
   async up() {
-    const exist = await this.hasTable("prices");
-    if (exist) {
+    const exchanges = await this.hasTable("exchanges");
+    const prices = await this.hasTable("prices")
+    if (exchanges && prices) {
       this.create("exchange_pairs", table => {
-        table.increments("exchange_pair_id");
+        table.increments("exchange_pair_id").primary();
         table
           .integer("exchange_id")
           .references("exchange_id")
           .inTable("exchanges")
           .onDelete("cascade")
-          .unique()
           .notNullable();
         table
           .integer("pair_id")
           .references("pair_id")
           .inTable("pairs")
           .onDelete("cascade")
-          .unique()
           .notNullable();
         table
           .integer("last_price")
           .references("price_id")
           .inTable("prices")
           .onDelete("set null");
-        table.boolean("active");
-        table.json("mkt_precision");
-        table.timestamps();
+        table.boolean("active").defaultTo(true);
+        table.integer("price_precision")
+      });
+      this.alter("exchange_pairs", table => {
+        table.unique(['exchange_id', 'pair_id'])
       });
     }
   }
 
   down() {
-    this.drop("exchange_pairs");
+    return this.raw('DROP TABLE exchange_pairs CASCADE');
   }
 }
 
