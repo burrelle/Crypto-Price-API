@@ -6,7 +6,7 @@ class ExchangeSchema extends Schema {
   up() {
     this.create("exchanges", table => {
       table.increments("exchange_id");
-      table.text("exchange_name");
+      table.text("exchange_name").notNullable();
       table.text("countries");
       table.json("urls");
       table.json("markets");

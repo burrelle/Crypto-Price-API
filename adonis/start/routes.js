@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /*
 |--------------------------------------------------------------------------
@@ -13,8 +13,10 @@
 |
 */
 
-const Route = use('Route')
+const Route = use("Route");
 
 Route.group(() => {
-  Route.get('coins', 'CoinController.index')
-}).prefix('/api')
+  Route.get("coins", "CoinController.index");
+  //Assets
+  Route.get("assets", "AssetController.index");
+}).prefix("/api");

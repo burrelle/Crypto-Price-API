@@ -6,16 +6,15 @@ class PairSchema extends Schema {
   up() {
     this.create("pairs", table => {
       table.increments("pair_id");
-      table.integer("base").unique();
-      table.integer("quote").unique();
-      table.timestamps();
+      table.integer("base_id").unique().notNullable();
+      table.integer("quote_id").unique().notNullable();
     });
     this.alter("pairs", table => {
       table
         .integer("pair_asset_fkey1")
         .references("asset_id")
         .inTable("assets")
-        .onDelete("cascase");
+        .onDelete("cascade");
       table
         .integer("pair_asset_fkey2")
         .references("asset_id")
