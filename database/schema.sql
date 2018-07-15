@@ -1,11 +1,11 @@
-﻿DROP TABLE IF EXISTS price CASCADE;
-DROP TABLE IF EXISTS pair CASCADE;
-DROP TABLE IF EXISTS asset CASCADE;
-DROP TABLE IF EXISTS exchange CASCADE;
-DROP TABLE IF EXISTS exchange_pair CASCADE;
+﻿DROP TABLE IF EXISTS prices CASCADE;
+DROP TABLE IF EXISTS pairs CASCADE;
+DROP TABLE IF EXISTS assets CASCADE;
+DROP TABLE IF EXISTS exchanges CASCADE;
+DROP TABLE IF EXISTS exchange_pairs CASCADE;
 
 -- price entry on a specific exchange at a given time
-CREATE TABLE price (
+CREATE TABLE prices (
     price_id serial PRIMARY KEY,
     exchange_pair_id int NOT NULL,
     price float NOT NULL,
@@ -16,8 +16,8 @@ CREATE TABLE price (
     ts int NOT NULL
 );
 
--- trading pair
-CREATE TABLE pair (
+-- a trading pair of assets
+CREATE TABLE pairs (
     pair_id serial PRIMARY KEY,
     -- base currency - references asset_id
     base_id int NOT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE pair (
     UNIQUE(base_id, quote_id)
 );
 
--- specific asset/coin
-CREATE TABLE asset (
+-- a specific asset/coin
+CREATE TABLE assets (
     asset_id serial PRIMARY KEY,
     asset_name text UNIQUE,
     asset_ticker text UNIQUE NOT NULL,
@@ -35,27 +35,25 @@ CREATE TABLE asset (
     asset_supply float
 );
 
--- exchange
-CREATE TABLE exchange (
+-- an exchange
+CREATE TABLE exchanges (
     exchange_id serial PRIMARY KEY,
     exchange_name text UNIQUE NOT NULL,
     countries text[],
-    urls json,
-    markets json,
-    symbols json
+    exchange_url text
 );
 
-
-CREATE TABLE exchange_pair (
+-- a pair trading on a specific exchange
+CREATE TABLE exchange_pairs (
     exchange_pair_id serial PRIMARY KEY,
-    exchange_id int REFERENCES exchange(exchange_id) ON DELETE CASCADE NOT NULL,
-    pair_id int REFERENCES pair(pair_id) ON DELETE CASCADE NOT NULL,
-    last_price int REFERENCES price(price_id) ON DELETE SET NULL,
-    active boolean,
-    mkt_precision json,
+    exchange_id int REFERENCES exchanges(exchange_id) ON DELETE CASCADE NOT NULL,
+    pair_id int REFERENCES pairs(pair_id) ON DELETE CASCADE NOT NULL,
+    last_price int REFERENCES prices(price_id) ON DELETE SET NULL,
+    active boolean DEFAULT TRUE,
+    price_precision int,
     UNIQUE (exchange_id, pair_id)
 );
 
-ALTER TABLE price ADD CONSTRAINT price_exchchange_pair_fkey FOREIGN KEY (exchange_pair_id) REFERENCES exchange_pair(exchange_pair_id) ON DELETE CASCADE;
-ALTER TABLE pair ADD CONSTRAINT pair_asset_fkey1 FOREIGN KEY (base_id) REFERENCES asset(asset_id) ON DELETE CASCADE;
-ALTER TABLE pair ADD CONSTRAINT pair_asset_fkey2 FOREIGN KEY (quote_id) REFERENCES asset(asset_id) ON DELETE CASCADE;
+ALTER TABLE prices ADD CONSTRAINT prices_exchange_pair_fkey FOREIGN KEY (exchange_pair_id) REFERENCES exchange_pairs(exchange_pair_id) ON DELETE CASCADE;
+ALTER TABLE pairs ADD CONSTRAINT pairs_asset_fkey1 FOREIGN KEY (base_id) REFERENCES assets(asset_id) ON DELETE CASCADE;
+ALTER TABLE pairs ADD CONSTRAINT pairs_asset_fkey2 FOREIGN KEY (quote_id) REFERENCES assets(asset_id) ON DELETE CASCADE;
