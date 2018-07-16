@@ -11,9 +11,9 @@ sed -i -e "s/DB_PASSWORD=.*/DB_PASSWORD=postgres/g" .env
 yarn install
 docker-compose build
 docker-compose up -d
+sleep 30
 psql -h localhost -U postgres -c "CREATE DATABASE adonis"
 adonis migration:run
-adonis seed
 IP_ADDRESS=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' adonis_postgres_1)
 docker-compose down
 sed -i -e "s/DB_HOST=.*/DB_HOST=$IP_ADDRESS/g" .env

@@ -27,7 +27,7 @@ const update_time = 120 * 1000;
 const start_time = update_time - Date.now() % update_time;
 var active = false;
 // get price data every two minutes on the minute
-timer_1.timer(/* start_time */ 0, update_time).subscribe(res => {
+timer_1.timer(start_time /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
     // iterate over all exchanges and get associated markets
     if (active) {
         console.log("ts: " + Date.now() + " not fetching prices because previous operation ongoing");
