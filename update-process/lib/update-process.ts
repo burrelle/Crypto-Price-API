@@ -41,13 +41,15 @@ const start_time: number = update_time - Date.now() % update_time;
 var active: boolean = false;
 
 // get price data every two minutes on the minute
-timer(start_time /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
+timer(0 /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
 
+  var req_time: number = 0;
   // iterate over all exchanges and get associated markets
   if (active) {
-    console.log("ts: " + Date.now() + " not fetching prices because previous operation ongoing");
+    console.log("ts: " + req_time + " not fetching prices because previous operation ongoing");
   } else {
-    console.log("ts: " + Date.now() + " fetching prices for: " + exchange_string);
+    req_time =  Math.round(Date.now() / 1000);
+    console.log("ts: " + req_time + " fetching prices for: " + exchange_string);
     active = true;
     for (const exchange of exchange_string) {
       // load the markets for the given exchange
@@ -121,6 +123,7 @@ timer(start_time /* use 0 here for testing if you want it to start immediately *
 
                     Promise.all(pricePromises).then(res => {
                       active = false;
+                      console.log("+" +  (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
                     }, err => {
                       console.log(err);
                     });
