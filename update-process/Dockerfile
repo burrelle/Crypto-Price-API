@@ -1,7 +1,16 @@
 FROM node:alpine
-RUN npm install -g yarn
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Typescript
 RUN npm install -g typescript
-WORKDIR /app
-COPY . /app
-RUN yarn install
-CMD ["yarn", "start"] 
+
+# Install app dependencies
+COPY package*.json ./
+
+RUN npm install -s
+# Bundle app source
+COPY . .
+
+CMD [ "npm", "start" ]
