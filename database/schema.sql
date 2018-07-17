@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS exchange_pairs CASCADE;
 
 -- price entry on a specific exchange at a given time
 CREATE TABLE prices (
-    price_id serial PRIMARY KEY,
+    price_id bigserial PRIMARY KEY,
     exchange_pair_id int NOT NULL,
     price float NOT NULL,
     bid float,
@@ -48,7 +48,7 @@ CREATE TABLE exchange_pairs (
     exchange_pair_id serial PRIMARY KEY,
     exchange_id int REFERENCES exchanges(exchange_id) ON DELETE CASCADE NOT NULL,
     pair_id int REFERENCES pairs(pair_id) ON DELETE CASCADE NOT NULL,
-    last_price int REFERENCES prices(price_id) ON DELETE SET NULL,
+    last_price bigint REFERENCES prices(price_id) ON DELETE SET NULL,
     active boolean DEFAULT TRUE,
     price_precision int,
     UNIQUE (exchange_id, pair_id)
