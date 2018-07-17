@@ -4,21 +4,21 @@ const Schema = use("Schema");
 
 class PriceSchema extends Schema {
   async up() {
-    const exists = await this.hasTable("exchange_pair_id");
-    if (exists) {
-      this.create("prices", table => {
-        table.increments("price_id");
-        table.integer("exchange_pair_id");
-        table.float("price").notNullable();
-        table.float("bid");
-        table.float("ask");
-        table.float("base_volume");
-        table.float("quote_volume");
-        table.timestamps();
-      });
+    this.create("prices", table => {
+      table.increments("price_id").primary();
+      table.integer("exchange_pair_id");
+      table.float("price").notNullable();
+      table.float("bid");
+      table.float("ask");
+      table.float("basevolume");
+      table.float("quotevolume");
+      table.integer("ts")
+    });
+    const exchange_pairs = await this.hasTable("exchange_pairs")
+    if (exchange_pairs) {
       this.alter("prices", table => {
         table
-          .integer("price_exchchange_pair_fkey")
+          .integer("prices_exchchange_pair_fkey")
           .references("exchange_pair_id")
           .inTable("exchange_pairs")
           .onDelete("cascade");
@@ -27,7 +27,7 @@ class PriceSchema extends Schema {
   }
 
   down() {
-    this.drop("prices");
+    return this.raw('DROP TABLE prices CASCADE');
   }
 }
 

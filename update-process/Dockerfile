@@ -4,13 +4,13 @@ FROM node:alpine
 WORKDIR /usr/src/app
 
 # Typescript
-RUN npm install -g yarn
+RUN npm install -g typescript
 
 # Install app dependencies
 COPY package*.json ./
 
-RUN yarn install -s
+RUN npm install -s
 # Bundle app source
 COPY . .
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]

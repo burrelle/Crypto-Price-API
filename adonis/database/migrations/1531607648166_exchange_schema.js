@@ -5,18 +5,15 @@ const Schema = use("Schema");
 class ExchangeSchema extends Schema {
   up() {
     this.create("exchanges", table => {
-      table.increments("exchange_id");
-      table.text("exchange_name").notNullable();
+      table.increments("exchange_id").primary();
+      table.text("exchange_name").notNullable().unique();
       table.text("countries");
-      table.json("urls");
-      table.json("markets");
-      table.json("symbols");
-      table.timestamps();
+      table.text("exchange_url")
     });
   }
 
   down() {
-    this.drop("exchanges");
+    return this.raw('DROP TABLE exchanges CASCADE');
   }
 }
 

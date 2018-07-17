@@ -1,0 +1,44 @@
+version: '3'
+
+networks:
+  net1:
+    driver: bridge
+
+services:
+  interface:
+    image: adonis:latest
+    build: ./adonis
+    ports:
+      - 3333:3333
+    restart: always
+    networks:
+      net1:
+        aliases:
+          - interface
+    volumes: 
+      - ./adonis/:/app
+    # depends_on:
+    #   - postgres
+
+  update:
+    image: update:latest
+    build: ./update-process
+    networks:
+      net1:
+        aliases:
+          - update
+    volumes: 
+      - ./update-process/:/app
+      
+  # postgres:
+  #   image: postgres:9.6
+  #   ports:
+  #     - 5432:5432
+  #   environment:
+  #     - POSTGRES_PASSWORD:postgres
+  #   networks:
+  #     net1:
+  #       aliases:
+  #         - postgres
+  #   volumes:
+  #     - ./postgres-data:/var/lib/postgresql/data
