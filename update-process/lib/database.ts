@@ -36,7 +36,7 @@ export function checkExchangePair(base: string, quote: string, precision:number,
   .then(client => {
     // console.log(exchange);
     // tslint:disable-next-line:max-line-length
-    return client.query("INSERT INTO exchange_pairs (exchange_id, pair_id, price_precision, active) SELECT (SELECT exchange_id FROM exchanges WHERE exchange_name = $1), (SELECT p.pair_id FROM pairs p WHERE p.base_id = (SELECT asset_id FROM assets WHERE asset_ticker = $2) AND p.quote_id = (SELECT asset_id FROM assets WHERE asset_ticker = $3)), $4, $5 ON CONFLICT (exchange_id, pair_id) DO NOTHING", [exchange, base, quote, precision, active])
+    return client.query("INSERT INTO exchange_pairs (exchange_id, pair_id, price_precision, active) SELECT (SELECT exchange_id FROM exchanges WHERE exchange_name = $1), (SELECT p.pair_id FROM pairs p WHERE p.base_id = (SELECT asset_id FROM assets WHERE asset_ticker = $2) AND p.quote_id = (SELECT asset_id FROM assets WHERE asset_ticker = $3)), $4, $5 ON CONFLICT (exchange_id, pair_id) DO UPDATE SET price_precision = $4, active = $5", [exchange, base, quote, precision, active])
     .then(res => {
       client.release();
     }).catch(e => {
@@ -51,8 +51,8 @@ export function checkExchange(exchange: Exchange): Promise<any> {
   .then(client => {
     return client.query(
       // tslint:disable-next-line:max-line-length
-      "INSERT INTO exchanges (exchange_name, exchange_url) VALUES ($1, $2) ON CONFLICT (exchange_name) DO NOTHING",
-      [exchange.name, exchange.exchange_url]
+      "INSERT INTO exchanges (exchange_name, countries, exchange_url) VALUES ($1, $2, $3) ON CONFLICT (exchange_name) DO UPDATE SET exchange_name = $1, countries = $2, exchange_url = $3",
+      [exchange.name, exchange.countries, exchange.exchange_url]
     )
     .then(res => {
       client.release();

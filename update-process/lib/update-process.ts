@@ -41,7 +41,7 @@ const start_time: number = update_time - Date.now() % update_time;
 var active: boolean = false;
 
 // get price data every two minutes on the minute
-timer(0 /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
+timer(start_time /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
 
   var req_time: number = 0;
   // iterate over all exchanges and get associated markets
