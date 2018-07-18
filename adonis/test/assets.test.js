@@ -11,4 +11,17 @@ describe("Asset Endpoints", () => {
     expect(response.body[0]).toHaveProperty("asset_website");
     expect(response.body[0]).toHaveProperty("asset_supply");
   });
+
+  it("GET /assets/:asset - Get a specific asset", async () => {
+    const findAsset = await api.get("/assets");
+    expect(findAsset.status).toEqual(200);
+    let specificAsset = findAsset.body[0].asset_ticker;
+    const response = await api.get('/assets/' + specificAsset);
+    expect(response.body).toHaveProperty("asset_id");
+    expect(response.body).toHaveProperty("asset_name");
+    expect(response.body).toHaveProperty("asset_ticker");
+    expect(response.body).toHaveProperty("asset_website");
+    expect(response.body).toHaveProperty("asset_supply");
+    expect(response.body.asset_ticker).toEqual(specificAsset);
+  });
 });

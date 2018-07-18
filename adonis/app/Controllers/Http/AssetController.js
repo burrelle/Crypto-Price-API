@@ -33,6 +33,8 @@ class AssetController {
    * GET assets/:id
    */
   async show ({ params, request, response, view }) {
+    let singleAsset = await Asset.query().where('asset_ticker', params.asset).first();
+    return response.json(singleAsset);
   }
 
   /**

@@ -16,7 +16,7 @@
 const Route = use("Route");
 
 Route.group(() => {
-  Route.get("coins", "CoinController.index");
   //Assets
   Route.get("assets", "AssetController.index");
+  Route.get("assets/:asset", "AssetController.show");
 }).prefix("/api");
