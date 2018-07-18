@@ -3,15 +3,23 @@ import {
   from
 } from "rxjs";
 // import RDS connection info for PostgreSQL client
-import {
-  pool
-} from "./connection";
+import { Pool } from "pg";
 import {
   Ticker
-} from "./models/ticker";
+} from "../models/ticker";
 import {
   Exchange
-} from "./models/exchange";
+} from "../models/exchange";
+
+require("dotenv").config();
+
+export const pool: Pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD,
+    port: 5432
+});
 
 export function checkAsset(ticker: string): Promise < any > {
   return pool.query("INSERT INTO assets (asset_ticker) VALUES ($1) ON CONFLICT (asset_ticker) DO NOTHING", [ticker])

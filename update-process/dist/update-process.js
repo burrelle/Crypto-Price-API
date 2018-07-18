@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // import ccxt - crypto trading library
 const ccxt = require("ccxt");
 const timer_1 = require("rxjs/observable/timer");
-const db = require("./database");
+const db = require("./db/database");
 const ticker_1 = require("./models/ticker");
 const exchange_1 = require("./models/exchange");
 const CHECK_EXCHANGE = false;
