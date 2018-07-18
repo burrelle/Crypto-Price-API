@@ -26,6 +26,12 @@ for (const exchange of exchange_string) {
 const update_time = 120 * 1000;
 const start_time = update_time - Date.now() % update_time;
 var active = false;
+process.on("SIGINT", _ => {
+    console.log("Shutting down db connection");
+    db.shutdown().then(_ => {
+        process.exit();
+    });
+});
 // get price data every two minutes on the minute
 timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
     var req_time = 0;
