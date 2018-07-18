@@ -6,6 +6,7 @@ const timer_1 = require("rxjs/observable/timer");
 const db = require("./db/database");
 const ticker_1 = require("./models/ticker");
 const exchange_1 = require("./models/exchange");
+const logger = require("./logger/logger");
 const CHECK_EXCHANGE = false;
 // exchanges to pull price data from
 // currently requires ccxt exchange api to have "fetchTickers" method - coinbase
@@ -19,7 +20,7 @@ const exchanges = {};
 for (const exchange of exchange_string) {
     exchanges[exchange] = new ccxt[exchange]();
     if (CHECK_EXCHANGE) {
-        console.log(exchange + " " + exchanges[exchange].has.fetchTickers);
+        logger.logInfo(exchange + " " + exchanges[exchange].has.fetchTickers);
     }
 }
 // time between data updates (in milliseconds)
@@ -27,21 +28,21 @@ const update_time = 120 * 1000;
 const start_time = update_time - Date.now() % update_time;
 var active = false;
 process.on("SIGINT", _ => {
-    console.log("Shutting down db connection");
+    logger.logInfo("Shutting down db connection");
     db.shutdown().then(_ => {
         process.exit();
     });
 });
+var req_time = 0;
 // get price data every two minutes on the minute
 timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
-    var req_time = 0;
     // iterate over all exchanges and get associated markets
     if (active) {
-        console.log("ts: " + req_time + " not fetching prices because previous operation ongoing");
+        logger.logInfo("ts: " + req_time + " not fetching prices because previous operation ongoing");
     }
     else {
         req_time = Math.round(Date.now() / 1000);
-        console.log("ts: " + req_time + " fetching prices for: " + exchange_string);
+        logger.logInfo("ts: " + req_time + " fetching prices for: " + exchange_string);
         active = true;
         for (const exchange of exchange_string) {
             // load the markets for the given exchange
@@ -112,22 +113,22 @@ timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */
                                 }
                                 Promise.all(pricePromises).then(res => {
                                     active = false;
-                                    console.log("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
+                                    logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
                                 }, err => {
-                                    console.log(err);
+                                    logger.logError(exchange + " pricePromises", err);
                                 });
                             });
                         }, err => {
-                            console.log(err);
+                            logger.logError(exchange + " exchangePairPromises", err);
                         });
                     }, err => {
-                        console.log(err);
+                        logger.logError(exchange + " pairPromises/exchangePromise", err);
                     });
                 }, err => {
-                    console.log(err);
+                    logger.logError(exchange + " assetPromises", err);
                 });
             }, err => {
-                console.log(err);
+                logger.logError(exchange + " loadMarkets", err);
             });
         }
     }

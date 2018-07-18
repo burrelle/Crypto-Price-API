@@ -10,6 +10,7 @@ import {
 import {
   Exchange
 } from "../models/exchange";
+import * as logger from "../logger/logger";
 
 require("dotenv").config();
 
@@ -24,7 +25,7 @@ export const pool: Pool = new Pool({
 export function checkAsset(ticker: string): Promise < any > {
   return pool.query("INSERT INTO assets (asset_ticker) VALUES ($1) ON CONFLICT (asset_ticker) DO NOTHING", [ticker])
     .catch(e => {
-      console.log(e);
+      logger.logError("checkAsset query", e);
     });
 }
 
@@ -32,7 +33,7 @@ export function checkPair(base: string, quote: string): Promise < any > {
   // tslint:disable-next-line:max-line-length
   return pool.query("INSERT INTO pairs (base_id, quote_id) SELECT (SELECT asset_id FROM assets WHERE asset_ticker = $1), (SELECT asset_id FROM assets WHERE asset_ticker = $2) ON CONFLICT (base_id, quote_id) DO NOTHING", [base, quote])
     .catch(e => {
-      console.log(e);
+      logger.logError("checkPair query", e);
     });
 }
 
@@ -40,7 +41,7 @@ export function checkExchangePair(base: string, quote: string, precision: number
   // tslint:disable-next-line:max-line-length
   return pool.query("INSERT INTO exchange_pairs (exchange_id, pair_id, price_precision, active) SELECT (SELECT exchange_id FROM exchanges WHERE exchange_name = $1), (SELECT p.pair_id FROM pairs p WHERE p.base_id = (SELECT asset_id FROM assets WHERE asset_ticker = $2) AND p.quote_id = (SELECT asset_id FROM assets WHERE asset_ticker = $3)), $4, $5 ON CONFLICT (exchange_id, pair_id) DO UPDATE SET price_precision = $4, active = $5", [exchange, base, quote, precision, active])
     .catch(e => {
-      console.log(e);
+      logger.logError("checkExchangePair query", e);
     });
 }
 
@@ -49,7 +50,7 @@ export function checkExchange(exchange: Exchange): Promise < any > {
     // tslint:disable-next-line:max-line-length
     "INSERT INTO exchanges (exchange_name, countries, exchange_url) VALUES ($1, $2, $3) ON CONFLICT (exchange_name) DO UPDATE SET exchange_name = $1, countries = $2, exchange_url = $3", [exchange.name, exchange.countries, exchange.exchange_url]
   ).catch(e => {
-    console.log(e);
+    logger.logError("checkExchange query", e);
   });
 }
 
@@ -68,14 +69,14 @@ export function checkPrice(priceObj: Ticker, exchange: string): Promise < any > 
             ).then(res => {
               client.release();
             }).catch(err => {
-              console.log(err);
+              logger.logError("checkPrice UPDATE query", err);
             });
           } else {
             client.release();
           }
         }).catch(e => {
           client.release();
-          console.log(e);
+          logger.logError("checkPrice INSERT query", e);
         });
     });
 }

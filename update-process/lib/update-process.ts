@@ -18,6 +18,7 @@ import {
 import {
   Exchange
 } from "./models/exchange";
+import * as logger from "./logger/logger";
 
 const CHECK_EXCHANGE: boolean = false;
 
@@ -34,7 +35,7 @@ for (const exchange of exchange_string) {
   exchanges[exchange] = new ccxt[exchange]();
 
   if (CHECK_EXCHANGE) {
-    console.log(exchange + " " + exchanges[exchange].has.fetchTickers);
+    logger.logInfo(exchange + " " + exchanges[exchange].has.fetchTickers);
   }
 }
 
@@ -45,22 +46,22 @@ const start_time: number = update_time - Date.now() % update_time;
 var active: boolean = false;
 
 process.on("SIGINT", _ => {
-  console.log("Shutting down db connection");
+  logger.logInfo("Shutting down db connection");
   db.shutdown().then(_ => {
     process.exit();
   });
 });
 
+var req_time: number = 0;
 // get price data every two minutes on the minute
-timer(start_time /* use 0 here for testing if you want it to start immediately */ , update_time).subscribe(res => {
+timer(0 /* use 0 here for testing if you want it to start immediately */ , update_time).subscribe(res => {
 
-  var req_time: number = 0;
   // iterate over all exchanges and get associated markets
   if (active) {
-    console.log("ts: " + req_time + " not fetching prices because previous operation ongoing");
+    logger.logInfo("ts: " + req_time + " not fetching prices because previous operation ongoing");
   } else {
     req_time = Math.round(Date.now() / 1000);
-    console.log("ts: " + req_time + " fetching prices for: " + exchange_string);
+    logger.logInfo("ts: " + req_time + " fetching prices for: " + exchange_string);
     active = true;
     for (const exchange of exchange_string) {
       // load the markets for the given exchange
@@ -131,28 +132,27 @@ timer(start_time /* use 0 here for testing if you want it to start immediately *
                         pricePromises.push(db.checkPrice(tObj, exchanges[exchange].name));
                       }
                     }
-
                     Promise.all(pricePromises).then(res => {
                       active = false;
-                      console.log("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
+                      logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
                     }, err => {
-                      console.log(err);
+                      logger.logError(exchange + " pricePromises", err);
                     });
                   });
                 }, err => {
-                  console.log(err);
+                  logger.logError(exchange + " exchangePairPromises", err);
                 });
               }, err => {
-                console.log(err);
+                logger.logError(exchange + " pairPromises/exchangePromise", err);
               });
             },
             err => {
-              console.log(err);
+              logger.logError(exchange + " assetPromises", err);
             }
           );
         },
         err => {
-          console.log(err);
+          logger.logError(exchange + " loadMarkets", err);
         }
       );
     }
