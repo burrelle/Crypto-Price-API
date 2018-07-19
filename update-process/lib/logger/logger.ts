@@ -16,7 +16,7 @@ const info_logger: winston.Logger = winston.createLogger({
 
 if (process.env.NODE_ENV !== "production") {
     err_logger.add(new winston.transports.Console({
-      format: winston.format.printf(info => `${info.message}`)
+      format: winston.format.json()
     }));
 }
 

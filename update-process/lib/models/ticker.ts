@@ -7,4 +7,5 @@ export class Ticker {
     quote: string;
     quoteVolume: number;
     ts: number;
+    exchange: string;
 }

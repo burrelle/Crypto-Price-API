@@ -60,27 +60,41 @@ timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */
         logger.logInfo("ts: " + req_time + " fetching prices for: " + exchange_string);
         active = true;
         var counter = 0;
-        // fetch price data
+        // make sure database structure includes all assets, pairs, exchanges, exchange pair
+        const updatePromises = [];
         for (const exchange of exchange_string) {
-            update(exchange).then(_ => {
-                counter++;
-                if (counter === exchange_string.length) {
-                    active = false;
-                }
-            });
+            updatePromises.push(updateStructure(exchange));
         }
+        // fetch prices
+        Promise.all(updatePromises).then(_ => {
+            const aggregate = {};
+            const pricePromises = [];
+            for (const exchange of exchange_string) {
+                pricePromises.push(updatePrices(exchange, aggregate));
+            }
+            Promise.all(pricePromises).then(_ => {
+                updateAggregate(aggregate).then(_ => {
+                    active = false;
+                });
+            });
+        });
     }
 });
 /********************************************************
  * Core update function
  *******************************************************/
-function update(exchange) {
+function updateStructure(exchange) {
     return __awaiter(this, void 0, void 0, function* () {
         var markets = yield fetchMarkets(exchange);
         yield fetchAssets(markets, exchange);
         yield fetchExchangeAndFetchPairs(markets, exchange);
         yield fetchExchangePairs(markets, exchange);
-        yield fetchPrices(exchange);
+    });
+}
+function updatePrices(exchange, aggregate) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // updates database with new prices, and adds price information to aggregate object
+        yield fetchPrices(exchange, aggregate);
     });
 }
 /********************************************************
@@ -155,7 +169,7 @@ function fetchExchangePairs(markets, exchange) {
     });
 }
 // fetch all price values at a given exchange
-function fetchPrices(exchange) {
+function fetchPrices(exchange, aggregate) {
     return exchanges[exchange].fetchTickers().then(tickers => {
         const pricePromises = [];
         for (var ticker in tickers) {
@@ -167,11 +181,19 @@ function fetchPrices(exchange) {
                 tObj.bid = tickers[ticker].bid;
                 tObj.price = tickers[ticker].close;
                 tObj.quote = tickers[ticker].symbol.split("/")[1];
+                tObj.exchange = exchanges[exchange].name;
                 // looks like quote volume is not supported for some
                 // exchanges in ccxt?
                 // tObj.quoteVolume = tickers[ticker].quoteVolume;
                 tObj.ts = Date.now() / 1000;
-                pricePromises.push(db.checkPrice(tObj, exchanges[exchange].name));
+                pricePromises.push(db.checkPrice(tObj));
+                // update aggregate object with all prices
+                if (aggregate[tickers[ticker].symbol]) {
+                    aggregate[tickers[ticker].symbol].push(tObj);
+                }
+                else {
+                    aggregate[tickers[ticker].symbol] = [tObj];
+                }
             }
         }
         return Promise.all(pricePromises).then(res => {
@@ -181,6 +203,55 @@ function fetchPrices(exchange) {
         });
     }).catch(e => {
         logger.logError(exchange + " fetchTickers", e);
+    });
+}
+// add aggregate prices to database
+function updateAggregate(aggregate) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const agg_exchange = new exchange_1.Exchange();
+        agg_exchange.name = "AGGREGATE";
+        // create aggregate exchange in database
+        yield db.checkExchangeSimple(agg_exchange);
+        const aggPairPromises = [];
+        // add aggregate exchange pairs
+        for (let pair in aggregate) {
+            if (aggregate.hasOwnProperty(pair)) {
+                // tslint:disable-next-line:max-line-length
+                aggPairPromises.push(db.checkExchangePairSimple(pair.split("/")[0], pair.split("/")[1], agg_exchange.name));
+            }
+        }
+        yield Promise.all(aggPairPromises);
+        const aggPricePromises = [];
+        for (let pair in aggregate) {
+            if (aggregate.hasOwnProperty(pair)) {
+                var aggPrice = new ticker_1.Ticker();
+                aggPrice.baseVolume = 0;
+                for (var price of aggregate[pair]) {
+                    aggPrice.baseVolume += price.baseVolume;
+                }
+                aggPrice.price = 0;
+                aggPrice.ask = 0;
+                aggPrice.base = pair.split("/")[0];
+                aggPrice.bid = 0;
+                aggPrice.exchange = agg_exchange.name;
+                aggPrice.quote = pair.split("/")[1];
+                aggPrice.ts = aggregate[pair][0].ts;
+                // aggregate function is currently simple volume weighted average
+                for (var price_ of aggregate[pair]) {
+                    aggPrice.price += price_.price * (price_.baseVolume / aggPrice.baseVolume);
+                    aggPrice.ask += price_.ask * (price_.baseVolume / aggPrice.baseVolume);
+                    aggPrice.bid += price_.bid * (price_.baseVolume / aggPrice.baseVolume);
+                }
+                if (pair === "ETH/BTC") {
+                    console.log(aggregate[pair]);
+                    console.log(aggPrice);
+                }
+                aggPricePromises.push(db.checkPrice(aggPrice));
+            }
+        }
+        yield Promise.all(aggPricePromises);
+        logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s aggregate fetch complete");
     });
 }
 //# sourceMappingURL=update-process.js.map
