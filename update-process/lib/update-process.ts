@@ -59,7 +59,7 @@ process.on("SIGINT", _ => {
  *******************************************************/
 
 // get price data every two minutes on the minute
-timer(0 /* use 0 here for testing if you want it to start immediately */ , update_time).subscribe(res => {
+timer(start_time /* use 0 here for testing if you want it to start immediately */ , update_time).subscribe(res => {
 
   // do not fetch new data if previous request is still pending
   if (active) {
@@ -268,11 +268,6 @@ async function updateAggregate(aggregate: object): Promise<any> {
         aggPrice.price += price_.price * (price_.baseVolume/aggPrice.baseVolume);
         aggPrice.ask += price_.ask * (price_.baseVolume/aggPrice.baseVolume);
         aggPrice.bid += price_.bid * (price_.baseVolume/aggPrice.baseVolume);
-      }
-
-      if (pair === "ETH/BTC") {
-        console.log(aggregate[pair]);
-        console.log(aggPrice);
       }
 
       aggPricePromises.push(db.checkPrice(aggPrice));
