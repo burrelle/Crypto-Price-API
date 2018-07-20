@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "./card.jsx";
+import ResponseCard from "./responsecard.jsx";
 import Sidebar from "./sidebar"
 import JsonExamples from "../utils/JsonExamples.js";
 
@@ -10,13 +10,13 @@ const Content = () => {
     <div className="h-full w-full overflow-hidden flex">
       <div id="right" className="h-full w-full flex flex-col">
         <div className="overflow-y-auto p-4 flex-1">
-          <Card
+          <ResponseCard
             verb="GET"
             endpoint="/coins"
             description="Get all of the available coins"
             json={JsonExamples.JsonExamples.getAllCoins}
           />
-          <Card
+          <ResponseCard
             verb="GET"
             endpoint="/coins/{coinName}"
             description="Get information about a specific coin"
