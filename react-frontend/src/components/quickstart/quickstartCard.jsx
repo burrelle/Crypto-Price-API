@@ -16,7 +16,7 @@ class QuickstartCard extends React.Component {
 
   render() {
     return (
-      <div className="mt-32" id={this.props.language}>
+      <div id={this.props.language}>
         <div className="rounded overflow-hidden shadow-md mb-4">
           <div className="px-6 py-4">
             <div className="font-b old text-xl mb-2 flex items-center">
@@ -26,7 +26,7 @@ class QuickstartCard extends React.Component {
               >
                 {this.state.showExample ? "x" : "+"}
               </span>
-              <div> {this.props.language} </div>
+              <div className="ml-4" onClick={this.handleToggleClick}> {this.props.language} </div>
               <div className="flex items-end text-grey-darker text-sm tracking-wide ml-2" />
             </div>
           </div>

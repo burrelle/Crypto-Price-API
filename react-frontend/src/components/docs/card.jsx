@@ -40,7 +40,7 @@ class Card extends React.Component {
       <div>
         <div className="rounded overflow-hidden shadow-md mb-4">
           <div className="px-6 py-4">
-            <div className="font-bold text-xl mb-2 flex">
+            <div className="font-bold text-lg mb-2 flex">
               {this.props.verb}
               <div className="flex items-end text-grey-darker text-sm tracking-wide ml-2">
                 {this.props.endpoint}
@@ -55,8 +55,13 @@ class Card extends React.Component {
               className="inline-block bg-purple-dark rounded-full px-3 py-1 text-sm text-white mr-2 hover:bg-white hover:text-purple-dark border-purple-dark border-2"
               onClick={this.handleToggleClick}
             >
-              {this.state.showExample ? "Hide" : "Show Example"}
+              {this.state.showExample ? "Hide" : "Sample Response"}
             </span>
+            <a href="#">
+              <span className="inline-block bg-green-dark rounded-full px-3 py-1 text-sm text-white mr-2 hover:bg-white hover:text-green-dark border-green-dark border-2">
+                Go Live
+              </span>
+            </a>
           </div>
           <Example example={this.state.showExample} json={this.props.json} />
         </div>
