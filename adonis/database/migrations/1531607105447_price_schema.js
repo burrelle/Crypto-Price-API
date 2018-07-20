@@ -5,14 +5,14 @@ const Schema = use("Schema");
 class PriceSchema extends Schema {
   async up() {
     this.create("prices", table => {
-      table.increments("price_id").primary();
-      table.integer("exchange_pair_id");
+      table.bigIncrements("price_id").primary();
+      table.integer("exchange_pair_id").notNullable();
       table.float("price").notNullable();
       table.float("bid");
       table.float("ask");
       table.float("basevolume");
       table.float("quotevolume");
-      table.integer("ts")
+      table.integer("ts").notNullable()
     });
     const exchange_pairs = await this.hasTable("exchange_pairs")
     if (exchange_pairs) {
