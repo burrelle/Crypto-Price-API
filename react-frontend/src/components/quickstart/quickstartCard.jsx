@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import QuickstartTutorials from './quickstartTutorials'
 
 class QuickstartCard extends React.Component {
   constructor(props) {
@@ -27,9 +28,9 @@ class QuickstartCard extends React.Component {
                 {this.state.showExample ? "x" : "+"}
               </span>
               <div className="ml-4" onClick={this.handleToggleClick}> {this.props.language} </div>
-              <div className="flex items-end text-grey-darker text-sm tracking-wide ml-2" />
             </div>
           </div>
+          <QuickstartTutorials example={this.state.showExample} tutorial={ this.props.tutorial } />
         </div>
       </div>
     );

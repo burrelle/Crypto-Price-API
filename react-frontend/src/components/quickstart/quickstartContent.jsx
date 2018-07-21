@@ -1,6 +1,8 @@
 import React from "react";
 import QuickstartCard from "./quickstartCard";
-import QuickstartSidebar from "./quickstartSidebar"
+import QuickstartSidebar from "./quickstartSidebar";
+import Python from "../../utils/PythonTutorial";
+import Node from "../../utils/NodeTutorial";
 
 const quickstartContent = () => {
   return (
@@ -10,9 +12,10 @@ const quickstartContent = () => {
         <div id="right" className="h-full w-full flex flex-col">
           <div className="overflow-y-auto p-4 flex-1">
             <div>
-              <QuickstartCard language="Node" />
-              <QuickstartCard language="Ruby" />
+              <QuickstartCard language="Node" tutorial={<Node />} />
               <QuickstartCard language="PHP" />
+              <QuickstartCard language="Ruby" />
+              <QuickstartCard language="Python" tutorial={<Python />} />
               <QuickstartCard language="Java" />
             </div>
           </div>

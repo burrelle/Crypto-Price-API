@@ -24,6 +24,20 @@ const Content = () => {
                 json={JsonExamples.getSingleAsset}
               />
             </div>
+            <div id="Exchanges">
+              <Card
+                verb="GET"
+                endpoint="/exchanges"
+                description="Get all of the available exchanges"
+                json={JsonExamples.getAllExchanges}
+              />
+              <Card
+                verb="GET"
+                endpoint="/exchanges/{exchange}"
+                description="Get information about a specific exchange"
+                json={JsonExamples.getSingleExchange}
+              />
+            </div>
           </div>
         </div>
       </div>
