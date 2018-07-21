@@ -3,6 +3,7 @@ import QuickstartCard from "./quickstartCard";
 import QuickstartSidebar from "./quickstartSidebar";
 import Python from "../../utils/PythonTutorial";
 import Node from "../../utils/NodeTutorial";
+import PHP from "../../utils/PhpTutorial"
 
 const quickstartContent = () => {
   return (
@@ -13,7 +14,7 @@ const quickstartContent = () => {
           <div className="overflow-y-auto p-4 flex-1">
             <div>
               <QuickstartCard language="Node" tutorial={<Node />} />
-              <QuickstartCard language="PHP" />
+              <QuickstartCard language="PHP" tutorial={<PHP />}/>
               <QuickstartCard language="Ruby" />
               <QuickstartCard language="Python" tutorial={<Python />} />
               <QuickstartCard language="Java" />
