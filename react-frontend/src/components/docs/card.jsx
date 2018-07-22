@@ -57,7 +57,7 @@ class Card extends React.Component {
             >
               {this.state.showExample ? "Hide" : "Sample Response"}
             </span>
-            <a href="#">
+            <a href={"http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api" + this.props.endpoint}>
               <span className="inline-block bg-green-dark rounded-full px-3 py-1 text-sm text-white mr-2 hover:bg-white hover:text-green-dark border-green-dark border-2">
                 Go Live
               </span>

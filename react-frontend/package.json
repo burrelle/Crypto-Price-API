@@ -18,6 +18,6 @@
   },
   "scripts": {
     "dev": "rm -rf dist .cache && ./node_modules/.bin/tailwind build index.tailwind.css -o ./src/index.css && parcel ./src/index.html",
-    "build": "/node_modules/.bin/tailwind build index.tailwind.css -o ./src/index.css && parcel build ./src/index.html/"
+    "build": "./node_modules/.bin/tailwind build index.tailwind.css -o ./src/index.css && parcel build ./src/index.html/"
   }
 }
