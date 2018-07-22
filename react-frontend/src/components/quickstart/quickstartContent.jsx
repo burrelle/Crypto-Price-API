@@ -5,6 +5,7 @@ import Python from "../../utils/PythonTutorial";
 import Node from "../../utils/NodeTutorial";
 import PHP from "../../utils/PhpTutorial";
 import Ruby from "../../utils/RubyTutorial";
+import Java from '../../utils/JavaTutorial';
 
 const quickstartContent = () => {
   return (
@@ -18,7 +19,7 @@ const quickstartContent = () => {
               <QuickstartCard language="PHP" tutorial={<PHP />}/>
               <QuickstartCard language="Ruby" tutorial={<Ruby />}/>
               <QuickstartCard language="Python" tutorial={<Python />} />
-              <QuickstartCard language="Java" />
+              <QuickstartCard language="Java" tutorial={<Java />} />
             </div>
           </div>
         </div>
