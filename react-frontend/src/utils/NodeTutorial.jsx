@@ -16,11 +16,13 @@ const NodeTutorial = () => {
         <br />
         <br />
         <pre className="text-sm text-green-darker shadow-md bg-grey-light p-4">
+          // Using Async/Await <br />
+          <br />
           // Import Axios library <br />
           import axios from 'axios'<br />
           <br />
           // Make a GET request to the API<br />
-          const response = axios.get('{APIURL}')<br />
+          const response = await axios.get('{APIURL}')<br />
           <br />
           // The JSON response is then outputted to the console <br />
           console.log(response) <br />

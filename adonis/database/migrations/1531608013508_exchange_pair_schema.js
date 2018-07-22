@@ -22,7 +22,7 @@ class ExchangePairSchema extends Schema {
           .onDelete("cascade")
           .notNullable();
         table
-          .integer("last_price")
+          .bigInteger("last_price")
           .references("price_id")
           .inTable("prices")
           .onDelete("set null");

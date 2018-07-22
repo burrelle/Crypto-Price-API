@@ -1,5 +1,6 @@
 'use strict'
 
+const Exchange = use('App/Models/Exchange')
 /**
  * Resourceful controller for interacting with exchanges
  */
@@ -9,6 +10,8 @@ class ExchangeController {
    * GET exchanges
    */
   async index ({ request, response, view }) {
+    let exchanges = await Exchange.all();
+    return response.json(exchanges);
   }
 
   /**
@@ -30,6 +33,8 @@ class ExchangeController {
    * GET exchanges/:id
    */
   async show ({ params, request, response, view }) {
+    let singleExchange = await Exchange.query().where('exchange_name', params.exchange).first();
+    return response.json(singleExchange);
   }
 
   /**
