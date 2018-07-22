@@ -12,10 +12,13 @@ const RubyTutorial = () => {
                 <br />
                 <br />
                 <pre className="text-sm text-green-darker shadow-md bg-grey-light p-4">
+                    #Import Library<br />
                     require 'open-uri' <br /><br />
                     
+                    #Get Response<br />
                     response = open('{APIURL}').read<br />
                 </pre >
+                <br />
             </p>
         </div>
     );
