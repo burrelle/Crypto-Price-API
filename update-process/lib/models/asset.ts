@@ -474,7 +474,7 @@ export const assets: object = {
     },
     GXS: {
         ticker: "GXS",
-        name: "CXChain",
+        name: "GXChain",
         img_url: null,
         website_url: ["https://gxs.gxb.io/"],
         circ_supply: null,
@@ -2055,5 +2055,405 @@ export const assets: object = {
         website_url: ["https://www.evergreencoin.org/"],
         circ_supply: null,
         total_supply: null
+    },
+    KEY: {
+        ticker: "Key",
+        name: "Selfkey",
+        img_url: null,
+        website_url: ["https://www.selfkey.org/"],
+        circ_supply: null,
+        total_supply: 5999999954
+    },
+    QKC: {
+        ticker: "QKC",
+        name: "QuarkChain",
+        img_url: null,
+        website_url: ["https://www.quarkchain.io/"],
+        circ_supply: null,
+        total_supply: 10000000000
+    },
+    ARN: {
+        ticker: "ARN",
+        name: "Aeron",
+        img_url: null,
+        website_url: ["https://aeron.aero/"],
+        circ_supply: null,
+        total_supply: 20000000
+    },
+    HOT: {
+        ticker: "HOT",
+        name: "Holo",
+        img_url: null,
+        website_url: ["https://www.holochain.org/"],
+        circ_supply: null,
+        total_supply: 177619433541
+    },
+    ENJ: {
+        ticker: "ENJ",
+        name: "Enjin Coin",
+        img_url: null,
+        website_url: ["https://www.enjincoin.io/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    DENT: {
+        ticker: "DENT",
+        name: "Dent",
+        img_url: null,
+        website_url: ["https://www.dentcoin.com/"],
+        circ_supply: null,
+        total_supply: 100000000000
+    },
+    GVT: {
+        ticker: "GVT",
+        name: "Genesis Vision",
+        img_url: null,
+        website_url: ["https://genesis.vision/"],
+        circ_supply: null,
+        total_supply: 4436644
+    },
+    POE: {
+        ticker: "POE",
+        name: "Po.Et",
+        img_url: null,
+        website_url: ["https://po.et/"],
+        circ_supply: null,
+        total_supply: 3141592653
+    },
+    LINK: {
+        ticker: "LINK",
+        name: "ChainLink",
+        img_url: null,
+        website_url: ["https://www.smartcontract.com/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    BLZ: {
+        ticker: "BLZ",
+        name: "Bluzelle",
+        img_url: null,
+        website_url: ["https://www.bluzelle.com/"],
+        circ_supply: null,
+        total_supply: 500000000
+    },
+    NCASH: {
+        ticker: "NCASH",
+        name: "Nucleaus Vision",
+        img_url: null,
+        website_url: ["https://nucleus.vision/"],
+        circ_supply: null,
+        total_supply: 10000000000
+    },
+    EDO: {
+        ticker: "EDO",
+        name: "Eidoo",
+        img_url: null,
+        website_url: ["https://www.eidoo.io/"],
+        circ_supply: null,
+        total_supply: 90208328
+    },
+    TNB: {
+        ticker: "TNB",
+        name: "Time New Bank",
+        img_url: null,
+        website_url: ["https://tnb.fund/"],
+        circ_supply: null,
+        total_supply: 5541679677
+    },
+    BRD: {
+        ticker: "BRD",
+        name: "Bread",
+        img_url: null,
+        website_url: ["https://www.brd.com/"],
+        circ_supply: null,
+        total_supply: 88862718
+    },
+    MDA: {
+        ticker: "MDA",
+        name: "Moeda Loyalty Points",
+        img_url: null,
+        website_url: ["https://moeda.in/"],
+        circ_supply: null,
+        total_supply: null
+    },
+    SUB: {
+        ticker: "SUB",
+        name: "Substratum",
+        img_url: null,
+        website_url: ["https://www.substratum.net/"],
+        circ_supply: null,
+        total_supply: 472000000
+    },
+    INS: {
+        ticker: "INS",
+        name: "INS Ecosystem",
+        img_url: null,
+        website_url: ["https://ins.world/"],
+        circ_supply: null,
+        total_supply: 50000000
+    },
+    POA: {
+        ticker: "POA",
+        name: "POA Network",
+        img_url: null,
+        website_url: ["https://poa.network/"],
+        circ_supply: null,
+        total_supply: 256288687
+    },
+    IOTX: {
+        ticker: "IOTX",
+        name: "IoTeX",
+        img_url: null,
+        website_url: ["https://www.iotex.io/"],
+        circ_supply: null,
+        total_supply: 10000000000
+    },
+    AGI: {
+        ticker: "AGI",
+        name: "SingularityNET",
+        img_url: null,
+        website_url: ["https://www.singularitynet.io/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    SKY: {
+        ticker: "SKY",
+        name: "Skycoin",
+        img_url: null,
+        website_url: ["https://www.skycoin.net/"],
+        circ_supply: null,
+        total_supply: 25000000
+    },
+    WPR: {
+        ticker: "WPR",
+        name: "WePower",
+        img_url: null,
+        website_url: ["https://wepower.network/"],
+        circ_supply: null,
+        total_supply: 745248183
+    },
+    RPX: {
+        ticker: "RPX",
+        name: "Red Pulse",
+        img_url: null,
+        website_url: ["https://www.redpulse.com/"],
+        circ_supply: null,
+        total_supply: 1358371250
+    },
+    DATA: {
+        ticker: "DATA",
+        name: "Streamr DATAcoin",
+        img_url: null,
+        website_url: ["https://www.streamr.com/"],
+        circ_supply: null,
+        total_supply: 987154514
+    },
+    THETA: {
+        ticker: "THETA",
+        name: "Theta Token",
+        img_url: null,
+        website_url: ["https://www.thetatoken.org/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    SNM: {
+        ticker: "SNM",
+        name: "SONM",
+        img_url: null,
+        website_url: ["https://www.sonm.io/"],
+        circ_supply: null,
+        total_supply: 444000000
+    },
+    TRIG: {
+        ticker: "TRIG",
+        name: "Triggers",
+        img_url: null,
+        website_url: ["https://www.blocksafefoundation.com/"],
+        circ_supply: null,
+        total_supply: null
+    },
+    AST: {
+        ticker: "AST",
+        name: "AirSwap",
+        img_url: null,
+        website_url: ["https://www.airswap.io/"],
+        circ_supply: null,
+        total_supply: 500000000
+    },
+    APPC: {
+        ticker: "APPC",
+        name: "AppCoins",
+        img_url: null,
+        website_url: ["https://www.appcoins.io/"],
+        circ_supply: null,
+        total_supply: 246203093
+    },
+    CHAT: {
+        ticker: "CHAT",
+        name: "ChatCoin",
+        img_url: null,
+        website_url: ["https://www.openchat.co/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    OST: {
+        ticker: "OST",
+        name: "OST",
+        img_url: null,
+        website_url: ["https://www.ost.com/"],
+        circ_supply: null,
+        total_supply: 800000000
+    },
+    CND: {
+        ticker: "CND",
+        name: "Cindicator",
+        img_url: null,
+        website_url: ["https://www.cindicator.com/"],
+        circ_supply: null,
+        total_supply: 2000000005
+    },
+    AMB: {
+        ticker: "AMB",
+        name: "Ambrosus",
+        img_url: null,
+        website_url: ["https://www.ambrosus.com/"],
+        circ_supply: null,
+        total_supply: 361477438
+    },
+    LEND: {
+        ticker: "LEND",
+        name: "ETHLend",
+        img_url: null,
+        website_url: ["https://www.ethlend.io/"],
+        circ_supply: null,
+        total_supply: 1299999942
+    },
+    CDT: {
+        ticker: "CDT",
+        name: "Blox",
+        img_url: null,
+        website_url: ["https://www.blox.io/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    NEBL: {
+        ticker: "NEBL",
+        name: "Neblio",
+        img_url: null,
+        website_url: ["https://www.nebl.io/"],
+        circ_supply: null,
+        total_supply: 14102454
+    },
+    DLT: {
+        ticker: "DLT",
+        name: "Agrello",
+        img_url: null,
+        website_url: ["https://www.agrello.org/"],
+        circ_supply: null,
+        total_supply: 130271020
+    },
+    QLC: {
+        ticker: "QLC",
+        name: "QLINK",
+        img_url: null,
+        website_url: ["https://qlink.mobi/"],
+        circ_supply: null,
+        total_supply: 600000000
+    },
+    WABI: {
+        ticker: "WABI",
+        name: "WaBi",
+        img_url: null,
+        website_url: ["https://www.wacoin.io/"],
+        circ_supply: null,
+        total_supply: 99218023
+    },
+    RDN: {
+        ticker: "RDN",
+        name: "Raiden",
+        img_url: null,
+        website_url: ["https://raiden.network/"],
+        circ_supply: null,
+        total_supply: 100000000
+    },
+    YOYOW: {
+        ticker: "YOYOW",
+        name: "YOYOW",
+        img_url: null,
+        website_url: ["https://www.yoyow.org/"],
+        circ_supply: null,
+        total_supply: 300000000
+    },
+    VIBE: {
+        ticker: "VIBE",
+        name: "VIBE",
+        img_url: null,
+        website_url: ["https://www.vibehub.io/"],
+        circ_supply: null,
+        total_supply: 267000000
+    },
+    FUEL: {
+        ticker: "FUEL",
+        name: "Etherparty",
+        img_url: null,
+        website_url: ["https://www.etherparty.com/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    MOD: {
+        ticker: "MOD",
+        name: "Modum",
+        img_url: null,
+        website_url: ["https://www.modum.io/"],
+        circ_supply: null,
+        total_supply: 27266200
+    },
+    EVX: {
+        ticker: "EVX",
+        name: "Everex",
+        img_url: null,
+        website_url: ["https://www.everex.io/"],
+        circ_supply: null,
+        total_supply: 25000000
+    },
+    TNT: {
+        ticker: "TNT",
+        name: "Tierion",
+        img_url: null,
+        website_url: ["https://www.tierion.com/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    SNGLS: {
+        ticker: "SNGLS",
+        name: "SingularDTV",
+        img_url: null,
+        website_url: ["https://www.singulardtv.com/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    OAX: {
+        ticker: "OAX",
+        name: "OAX",
+        img_url: null,
+        website_url: ["https://www.oax.org/"],
+        circ_supply: null,
+        total_supply: 100000000
+    },
+    MTL: {
+        ticker: "MTL",
+        name: "Metal",
+        img_url: null,
+        website_url: ["https://www.metalpay.com/"],
+        circ_supply: null,
+        total_supply: 65588888
+    },
+    MTH: {
+        ticker: "MTH",
+        name: "Monetha",
+        img_url: null,
+        website_url: ["https://www.monetha.io/"],
+        circ_supply: null,
+        total_supply: 402400000
     }
 };
