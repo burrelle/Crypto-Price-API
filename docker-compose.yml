@@ -34,6 +34,10 @@ services:
     image: redis:alpine
     ports:
       - 6379:6379
+    networks:
+      net1:
+        aliases:
+          - cache
     
   # postgres:
   #   image: postgres:9.6
