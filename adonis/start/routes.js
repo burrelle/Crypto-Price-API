@@ -22,4 +22,6 @@ Route.group(() => {
   // Exchanges
   Route.get("exchanges", "ExchangeController.index");
   Route.get("exchanges/:exchange", "ExchangeController.show");
+  // Pairs
+  Route.get("pairs", "PairController.index");
 }).prefix("/api");
