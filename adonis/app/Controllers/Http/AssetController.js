@@ -1,5 +1,6 @@
 'use strict'
 
+const Redis = use('Redis')
 const Asset = use('App/Models/Asset')
 /**
  * Resourceful controller for interacting with assets
@@ -10,7 +11,13 @@ class AssetController {
    * GET assets
    */
   async index ({ request, response, view }) {
+    const cachedAssets = await Redis.get('assets')
+    if(cachedAssets){
+      return JSON.parse(cachedAssets)
+    }
+
     let assets = await Asset.all();
+    await Redis.set('assets', JSON.stringify(assets))
     return response.json(assets);
   }
 

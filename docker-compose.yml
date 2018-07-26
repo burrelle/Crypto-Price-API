@@ -30,6 +30,12 @@ services:
     volumes: 
       - ./update-process/:/app
       
+  redis:
+    image: redis:alpine
+    container_name: cache
+    ports:
+      - 6379:6379
+    
   # postgres:
   #   image: postgres:9.6
   #   ports:
