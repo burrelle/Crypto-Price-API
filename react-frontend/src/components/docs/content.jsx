@@ -38,6 +38,28 @@ const Content = () => {
                 json={JsonExamples.getSingleExchange}
               />
             </div>
+            <div id="Pairs">
+              <Card
+                verb="GET"
+                endpoint="/pairs"
+                description="Get all of the available pairs"
+                json={JsonExamples.getAllPairs}
+              />
+            </div>
+            <div id="Price" />
+            <Card
+              verb="GET"
+              endpoint="/prices/all"
+              description="Get all of the available prices"
+              json={JsonExamples.getAllPrices}
+            />
+            <div id="Price History" />
+            <Card
+              verb="GET"
+              endpoint="/prices/history?exchange=&base=&price="
+              description="Get all of the available price history"
+              json={JsonExamples.getPriceHistory}
+            />
           </div>
         </div>
       </div>
