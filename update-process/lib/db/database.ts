@@ -86,7 +86,7 @@ export function checkExchangeSimple(exchange: Exchange): Promise < any > {
 
 export function checkPrice(priceObj: Ticker, ): Promise < any > {
   // tslint:disable-next-line:max-line-length
-  const table_name: string = "prices." + priceObj.exchange.toLowerCase() + "_" + priceObj.quote.toLowerCase() + "_" + priceObj.base.toLowerCase();
+  const table_name: string = "prices." + priceObj.exchange.toLowerCase() + "_" +  priceObj.base.toLowerCase() + "_" + priceObj.quote.toLowerCase();
   return pool.connect()
     .then(client => {
       // tslint:disable-next-line:max-line-length
