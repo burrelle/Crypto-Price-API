@@ -5,8 +5,7 @@ const Schema = use("Schema");
 class ExchangePairSchema extends Schema {
   async up() {
     const exchanges = await this.hasTable("exchanges");
-    const prices = await this.hasTable("prices")
-    if (exchanges && prices) {
+    if (exchanges) {
       this.create("exchange_pairs", table => {
         table.increments("exchange_pair_id").primary();
         table
@@ -22,10 +21,7 @@ class ExchangePairSchema extends Schema {
           .onDelete("cascade")
           .notNullable();
         table
-          .bigInteger("last_price")
-          .references("price_id")
-          .inTable("prices")
-          .onDelete("set null");
+          .json("last_price")
         table.boolean("active").defaultTo(true);
         table.integer("price_precision")
       });
