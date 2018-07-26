@@ -27,7 +27,7 @@ export const pool: Pool = new Pool({
 export function checkAsset(ticker: string): Promise < any > {
   if (assets[ticker]) {
     // tslint:disable-next-line:max-line-length
-    return pool.query("INSERT INTO assets (asset_ticker, asset_name, asset_website, asset_total_supply) VALUES ($1, $2, $3, $4) ON CONFLICT (asset_ticker) DO NOTHING", [ticker, assets[ticker].name, assets[ticker].asset_website, assets[ticker].total_supply])
+    return pool.query("INSERT INTO assets (asset_ticker, asset_name, asset_website, asset_total_supply) VALUES ($1, $2, $3, $4) ON CONFLICT (asset_ticker) DO UPDATE SET asset_name = $2, asset_website=$3, asset_total_supply=$4", [ticker, assets[ticker].name, assets[ticker].website_url, assets[ticker].total_supply])
     .catch(e => {
       logger.logError("checkAsset query", e);
     });
