@@ -15,6 +15,7 @@ const db = require("./db/database");
 const ticker_1 = require("./models/ticker");
 const exchange_1 = require("./models/exchange");
 const logger = require("./logger/logger");
+const market_details_1 = require("./models/market_details");
 /********************************************************
  * Setup
  *******************************************************/
@@ -32,6 +33,8 @@ const exchange_string = [
 ];
 // map of ccxt exchange objects
 const exchanges = {};
+// map of reorganized market data
+const market_details = new market_details_1.MarketDetails();
 // generate exchange objects
 for (const exchange of exchange_string) {
     exchanges[exchange] = new ccxt[exchange]();
@@ -63,7 +66,7 @@ timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */
         // make sure database structure includes all assets, pairs, exchanges, exchange pair
         const updatePromises = [];
         for (const exchange of exchange_string) {
-            updatePromises.push(updateStructure(exchange));
+            updatePromises.push(updateStructure(exchange, market_details));
         }
         // fetch prices
         Promise.all(updatePromises).then(_ => {
@@ -83,11 +86,11 @@ timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */
 /********************************************************
  * Core update function
  *******************************************************/
-function updateStructure(exchange) {
+function updateStructure(exchange, market_details) {
     return __awaiter(this, void 0, void 0, function* () {
         var markets = yield fetchMarkets(exchange);
         yield fetchAssets(markets, exchange);
-        yield fetchExchangeAndFetchPairs(markets, exchange);
+        yield fetchExchangeAndFetchPairs(markets, exchange, market_details);
         yield fetchExchangePairs(markets, exchange);
     });
 }
@@ -132,12 +135,12 @@ function fetchAssets(markets, exchange) {
     });
 }
 // fetches exchange info, pair info
-function fetchExchangeAndFetchPairs(markets, exchange) {
+function fetchExchangeAndFetchPairs(markets, exchange, market_details) {
     // get all pairs that need to be checked
     const pairPromises = [];
     for (var exchange_pair in markets) {
         if (markets.hasOwnProperty(exchange_pair)) {
-            pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote));
+            pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote, market_details));
         }
     }
     const eObj = new exchange_1.Exchange();
@@ -242,10 +245,6 @@ function updateAggregate(aggregate) {
                     aggPrice.price += price_.price * (price_.baseVolume / aggPrice.baseVolume);
                     aggPrice.ask += price_.ask * (price_.baseVolume / aggPrice.baseVolume);
                     aggPrice.bid += price_.bid * (price_.baseVolume / aggPrice.baseVolume);
-                }
-                if (pair === "ETH/BTC") {
-                    console.log(aggregate[pair]);
-                    console.log(aggPrice);
                 }
                 aggPricePromises.push(db.checkPrice(aggPrice));
             }

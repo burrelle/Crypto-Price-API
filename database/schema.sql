@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS exchanges CASCADE;
 DROP TABLE IF EXISTS exchange_pairs CASCADE;
 
 -- price entry on a specific exchange at a given time
-CREATE TABLE prices (
+/* CREATE TABLE prices (
     price_id bigserial PRIMARY KEY,
     exchange_pair_id int NOT NULL,
     price float NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE prices (
     baseVolume float,
     quoteVolume float,
     ts int NOT NULL
-);
+); */
 
 -- a trading pair of assets
 CREATE TABLE pairs (
@@ -23,6 +23,7 @@ CREATE TABLE pairs (
     base_id int NOT NULL,
     -- quote currency - references asset_id
     quote_id int NOT NULL,
+    exchanges text[],
     UNIQUE(base_id, quote_id)
 );
 
@@ -31,8 +32,9 @@ CREATE TABLE assets (
     asset_id serial PRIMARY KEY,
     asset_name text UNIQUE,
     asset_ticker text UNIQUE NOT NULL,
-    asset_website text,
-    asset_supply float
+    asset_website text[],
+    asset_circ_supply float,
+    asset_total_supply float
 );
 
 -- an exchange
@@ -48,12 +50,11 @@ CREATE TABLE exchange_pairs (
     exchange_pair_id serial PRIMARY KEY,
     exchange_id int REFERENCES exchanges(exchange_id) ON DELETE CASCADE NOT NULL,
     pair_id int REFERENCES pairs(pair_id) ON DELETE CASCADE NOT NULL,
-    last_price bigint REFERENCES prices(price_id) ON DELETE SET NULL,
+    last_price json,
     active boolean DEFAULT TRUE,
     price_precision int,
     UNIQUE (exchange_id, pair_id)
 );
 
-ALTER TABLE prices ADD CONSTRAINT prices_exchange_pair_fkey FOREIGN KEY (exchange_pair_id) REFERENCES exchange_pairs(exchange_pair_id) ON DELETE CASCADE;
 ALTER TABLE pairs ADD CONSTRAINT pairs_asset_fkey1 FOREIGN KEY (base_id) REFERENCES assets(asset_id) ON DELETE CASCADE;
 ALTER TABLE pairs ADD CONSTRAINT pairs_asset_fkey2 FOREIGN KEY (quote_id) REFERENCES assets(asset_id) ON DELETE CASCADE;

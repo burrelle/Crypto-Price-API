@@ -1,12 +1,3 @@
-export class Asset {
-    ticker: string;
-    name: string;
-    img_url: string;
-    website_url: string[];
-    total_supply: number;
-    circ_supply: number;
-}
-
 export const assets: object = {
     BTC: {
         ticker: "BTC",
@@ -2455,5 +2446,125 @@ export const assets: object = {
         website_url: ["https://www.monetha.io/"],
         circ_supply: null,
         total_supply: 402400000
+    },
+    GBP: {
+        ticker: "GBP",
+        name: "Pound Sterling",
+        img_url: null,
+        website_url: [null],
+        circ_supply: null,
+        total_supply: null
+    },
+    FCT: {
+        ticker: "FCT",
+        name: "Factom",
+        img_url: null,
+        website_url: ["https://www.factom.org/"],
+        circ_supply: null,
+        total_supply: null
+    },
+    JPY: {
+        ticker: "JPY",
+        name: "Japanese Yen",
+        img_url: null,
+        website_url: [null],
+        circ_supply: null,
+        total_supply: null
+    },
+    RFR: {
+        ticker: "RFR",
+        name: "Refereum",
+        img_url: null,
+        website_url: ["https://www.refereum.com/"],
+        circ_supply: null,
+        total_supply: 5000000000
+    },
+    USD: {
+        ticker: "USD",
+        name: "United States Dollar",
+        img_url: null,
+        website_url: [null],
+        circ_supply: null,
+        total_supply: null
+    },
+    REQ: {
+        ticker: "REQ",
+        name: "Request Network",
+        img_url: null,
+        website_url: ["https://request.network/"],
+        circ_supply: null,
+        total_supply: 999990765
+    },
+    EUR: {
+        ticker: "EUR",
+        name: "Euro",
+        img_url: null,
+        website_url: [null],
+        circ_supply: null,
+        total_supply: null
+    },
+    QSP: {
+        ticker: "QSP",
+        name: "Quantstamp",
+        img_url: null,
+        website_url: ["https://www.quantstamp.com/"],
+        circ_supply: null,
+        total_supply: 976442388
+    },
+    CAD: {
+        ticker: "CAD",
+        name: "Canadian Dollar",
+        img_url: null,
+        website_url: ["https://www.quantstamp.com/"],
+        circ_supply: null,
+        total_supply: null
+    },
+    SAN: {
+        ticker: "SAN",
+        name: "Santiment",
+        img_url: null,
+        website_url: ["https://www.santiment.net/"],
+        circ_supply: null,
+        total_supply: 83337000
+    },
+    AVT: {
+        ticker: "AVT",
+        name: "Aventus",
+        img_url: null,
+        website_url: ["https://www.aventus.io/"],
+        circ_supply: null,
+        total_supply: 10000000
+    },
+    SPANK: {
+        ticker: "SPANK",
+        name: "SpankChain",
+        img_url: null,
+        website_url: ["https://www.spankchain.com/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    DAI: {
+        ticker: "DAI",
+        name: "Dai",
+        img_url: null,
+        website_url: ["https://www.makerdao.com/"],
+        circ_supply: null,
+        total_supply: null
+    },
+    BFT: {
+        ticker: "BFT",
+        name: "BnkToTheFuture",
+        img_url: null,
+        website_url: ["https://bf-token.bnktothefuture.com/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    MTN: {
+        ticker: "MTN",
+        name: "Medicalchain",
+        img_url: null,
+        website_url: ["https://www.medicalchain.com/en/"],
+        circ_supply: null,
+        total_supply: 500000000
     }
 };

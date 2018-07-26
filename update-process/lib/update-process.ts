@@ -19,6 +19,7 @@ import {
   Exchange
 } from "./models/exchange";
 import * as logger from "./logger/logger";
+import { MarketDetails } from "./models/market_details";
 
 /********************************************************
  * Setup
@@ -38,6 +39,8 @@ const exchange_string: string[] = [
 ];
 // map of ccxt exchange objects
 const exchanges: object = {};
+// map of reorganized market data
+const market_details: MarketDetails = new MarketDetails();
 // generate exchange objects
 for (const exchange of exchange_string) {
   exchanges[exchange] = new ccxt[exchange]();
@@ -59,7 +62,7 @@ process.on("SIGINT", _ => {
  *******************************************************/
 
 // get price data every two minutes on the minute
-timer(start_time /* use 0 here for testing if you want it to start immediately */ , update_time).subscribe(res => {
+timer(0 /* use 0 here for testing if you want it to start immediately */ , update_time).subscribe(res => {
 
   // do not fetch new data if previous request is still pending
   if (active) {
@@ -73,7 +76,7 @@ timer(start_time /* use 0 here for testing if you want it to start immediately *
     // make sure database structure includes all assets, pairs, exchanges, exchange pair
     const updatePromises:Promise<any>[] = [];
     for (const exchange of exchange_string) {
-      updatePromises.push(updateStructure(exchange));
+      updatePromises.push(updateStructure(exchange, market_details));
     }
     // fetch prices
     Promise.all(updatePromises).then(_ => {
@@ -95,10 +98,10 @@ timer(start_time /* use 0 here for testing if you want it to start immediately *
  * Core update function
  *******************************************************/
 
-async function updateStructure(exchange: string): Promise < any > {
+async function updateStructure(exchange: string, market_details: MarketDetails): Promise < any > {
   var markets: object = await fetchMarkets(exchange);
   await fetchAssets(markets, exchange);
-  await fetchExchangeAndFetchPairs(markets, exchange);
+  await fetchExchangeAndFetchPairs(markets, exchange, market_details);
   await fetchExchangePairs(markets, exchange);
 }
 
@@ -147,12 +150,12 @@ function fetchAssets(markets: object, exchange: string): Promise < any > {
 }
 
 // fetches exchange info, pair info
-function fetchExchangeAndFetchPairs(markets: object, exchange: string): Promise < any > {
+function fetchExchangeAndFetchPairs(markets: object, exchange: string, market_details: MarketDetails): Promise < any > {
   // get all pairs that need to be checked
   const pairPromises: Promise < any > [] = [];
   for (var exchange_pair in markets) {
     if (markets.hasOwnProperty(exchange_pair)) {
-      pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote));
+      pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote, market_details));
     }
   }
   const eObj: Exchange = new Exchange();
