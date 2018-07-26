@@ -1,5 +1,6 @@
 'use strict'
 
+const Redis = use('Redis')
 const Exchange = use('App/Models/Exchange')
 /**
  * Resourceful controller for interacting with exchanges
@@ -10,7 +11,13 @@ class ExchangeController {
    * GET exchanges
    */
   async index ({ request, response, view }) {
+    const cachedExchanges = await Redis.get('exchanges')
+    if(cachedExchanges){
+      return JSON.parse(cachedExchanges)
+    }
+
     let exchanges = await Exchange.all();
+    await Redis.set('exchanges', JSON.stringify(exchanges))
     return response.json(exchanges);
   }
 
