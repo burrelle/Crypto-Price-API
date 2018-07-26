@@ -7,8 +7,8 @@ class ExchangeSchema extends Schema {
     this.create("exchanges", table => {
       table.increments("exchange_id").primary();
       table.text("exchange_name").notNullable().unique();
-      table.text("countries");
-      table.text("exchange_url")
+      table.specificType("countries", "text[]");
+      table.text("exchange_url");
     });
   }
 

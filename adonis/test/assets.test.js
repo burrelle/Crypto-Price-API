@@ -9,7 +9,8 @@ describe("Asset Endpoints", () => {
     expect(response.body[0]).toHaveProperty("asset_name");
     expect(response.body[0]).toHaveProperty("asset_ticker");
     expect(response.body[0]).toHaveProperty("asset_website");
-    expect(response.body[0]).toHaveProperty("asset_supply");
+    expect(response.body[0]).toHaveProperty("asset_circ_supply");
+    expect(response.body[0]).toHaveProperty("asset_total_supply");
   });
 
   it("GET /assets/:asset - Get a specific asset", async () => {
@@ -21,7 +22,8 @@ describe("Asset Endpoints", () => {
     expect(response.body).toHaveProperty("asset_name");
     expect(response.body).toHaveProperty("asset_ticker");
     expect(response.body).toHaveProperty("asset_website");
-    expect(response.body).toHaveProperty("asset_supply");
+    expect(response.body).toHaveProperty("asset_circ_supply");
+    expect(response.body).toHaveProperty("asset_total_supply");
     expect(response.body.asset_ticker).toEqual(specificAsset);
   });
 });

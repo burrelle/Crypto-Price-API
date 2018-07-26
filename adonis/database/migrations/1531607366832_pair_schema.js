@@ -8,6 +8,7 @@ class PairSchema extends Schema {
       table.increments("pair_id").primary();
       table.integer("base_id").notNullable();
       table.integer("quote_id").notNullable();
+      table.specificType('exchanges', 'text[]')
     });
     const assets = await this.hasTable('assets')
     if (assets) {
