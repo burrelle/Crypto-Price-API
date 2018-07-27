@@ -1,8 +1,6 @@
 import React from "react";
-
-const APIURL = "https://jsonplaceholder.typicode.com/posts/1";
-
-export default function Python() {
+ const APIURL = "https://jsonplaceholder.typicode.com/posts/1";
+ export default function Python() {
   return (
     <div className="flex">
       <p className="text-sm leading-normal flex-1">

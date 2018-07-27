@@ -20,6 +20,9 @@ const Navbar = () => {
         <Link to="/faq" className="no-underline text-black m-8 hover:text-purple-dark hover:font-bold">
           FAQ
         </Link>
+        <Link to="/charts" className="no-underline text-black m-8 hover:text-purple-dark hover:font-bold">
+          Charts
+        </Link>
       </nav>
       <div className="inline-block relative">
         <select className="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-2 py-1 pr-8 rounded leading-tight">
