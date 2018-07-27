@@ -5,7 +5,7 @@ const APIURL = "https://jsonplaceholder.typicode.com/posts/1";
 const JavaTutorial = () => {
     return (
         <div className = "flex">
-            <p className = "text-sm flex-l lead-normal">
+            <p className = "text-sm flex-1 lead-normal">
                 <h2> Java Requests </h2>
                 This guide shows how to make an API request using Java and the Apache
                 <code> HttpClient </code> library.

@@ -5,7 +5,7 @@ const APIURL = "https://jsonplaceholder.typicode.com/posts/1";
 const RubyTutorial = () => {
     return (
         <div className = "flex">
-            <p className = "text-sm flex-l lead-normal">
+            <p className = "text-sm flex-1 lead-normal">
                 <h2> Ruby on Rails Requests </h2>
                 This guide shows how to make an API request using Ruby on Rails and the 
                 <code> open-uri </code> library.
