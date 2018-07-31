@@ -9,7 +9,7 @@ class AssetSchema extends Schema {
       table.text("asset_name").unique();
       table.text("asset_ticker").notNullable().unique();
       table.specificType("asset_website", "text[]");
-      table.float("asset_circ_supply float");
+      table.float("asset_circ_supply");
       table.float("asset_total_supply");
     });
   }

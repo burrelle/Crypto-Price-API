@@ -53,6 +53,12 @@ const Content = () => {
               description="Get all of the available prices"
               json={JsonExamples.getAllPrices}
             />
+            <Card
+              verb="GET"
+              endpoint="/prices?exchange={}&base={}&quote={}"
+              description="Get the current exchange pair price"
+              json={JsonExamples.getAllPrices}
+            />
             <div id="Price History" />
             <Card
               verb="GET"
