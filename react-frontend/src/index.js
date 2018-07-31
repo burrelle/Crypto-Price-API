@@ -6,6 +6,7 @@ import Content from "./components/docs/content.jsx";
 import Quickstart from "./components/quickstart/quickstartContent.jsx"
 import Faq from "./components/FAQ/faq.jsx"
 import Home from "./components/home.jsx"
+import Charts from "./components/charts.jsx"
 
 const App = () => {
   return (
@@ -15,7 +16,8 @@ const App = () => {
       <Route exact path="/" component={Home} />
       <Route path="/docs" component={Content}></Route>
       <Route path="/quickstart" component={Quickstart}></Route>
-      <Route path="/faq" component={Faq} />      
+      <Route path="/faq" component={Faq} />
+      <Route path="/charts" component={Charts}></Route>
       </div>
     </Router>
   );

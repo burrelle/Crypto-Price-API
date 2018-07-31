@@ -230,7 +230,7 @@ function fetchPrices(exchange: string, aggregate: object): Promise < any > {
 async function updateAggregate(aggregate: object): Promise<any> {
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const agg_exchange: Exchange = new Exchange();
-  agg_exchange.name = "AGGREGATE";
+  agg_exchange.name = "Aggregate";
 
   // create aggregate exchange in database
   await db.checkExchangeSimple(agg_exchange);
