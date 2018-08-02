@@ -2,6 +2,7 @@
 
 const Redis = use('Redis')
 const Asset = use('App/Models/Asset')
+const Database = use('Database')
 /**
  * Resourceful controller for interacting with assets
  */
@@ -11,6 +12,13 @@ class AssetController {
    * GET assets
    */
   async index ({ request, response, view }) {
+    const query = request.get();
+    
+    if(query.orderByTotalSupply){
+      let assets = await Database.select('*').from('assets').orderBy('asset_total_supply')
+      return response.json(assets);
+    }
+    
     const cachedAssets = await Redis.get('assets')
     if(cachedAssets){
       return JSON.parse(cachedAssets)
