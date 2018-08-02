@@ -14,7 +14,7 @@ const quote = "usdt";
 class Charts extends React.Component {
   constructor() {
     super();
-    this.state = { data: null, date: null, exchanges: null };
+    this.state = { data: null, date: null, exchanges: null, pairs: null };
     this.update = this.update.bind(this);
   }
 
@@ -38,13 +38,24 @@ class Charts extends React.Component {
     return exchanges;
   }
 
+  async getPairs() {
+    const response = await axios.get("http://localhost:3333/api/pairs");
+    const data = response.data;
+    const pairs = data.reduce((total, amount) => {
+      total.push([amount.base, amount.quote]);
+      return total;
+    }, []);
+    return pairs;
+  }
+
   componentDidMount() {
     if (!this.state.data) {
       (async () => {
         try {
           this.setState({
             data: await this.getPrices(),
-            exchanges: await this.getExchanges()
+            exchanges: await this.getExchanges(),
+            pairs: await this.getPairs()
           });
         } catch (e) {
           console.log(e);
@@ -85,36 +96,58 @@ class Charts extends React.Component {
           colors={["#794acf", "#794acf"]}
         />
         <div className="flex justify-between items-center py-4 text-sm">
-          <div>
+          <div>Last Updated: {this.state.date}</div>
+          <div className="flex">
+            <div className="inline-block relative px-2">
+              <select className="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-2 py-1 pr-8 rounded leading-tight">
+                {this.state.exchanges ? (
+                  this.state.exchanges.map((item, i) => (
+                    <option key={i} value={item}>
+                      {item}
+                    </option>
+                  ))
+                ) : (
+                  <option>Loading...</option>
+                )}
+              </select>
+              <div className="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+            <div className="inline-block relative px-2">
+              <select className="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-2 py-1 pr-8 rounded leading-tight">
+                {this.state.pairs ? (
+                  this.state.pairs.map((item, i) => (
+                    <option key={i} value={item}>
+                      {item[0]} &rarr; {item[1]}
+                    </option>
+                  ))
+                ) : (
+                  <option>Loading...</option>
+                )}
+              </select>
+              <div className="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+                <svg
+                  className="fill-current h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
             <span
               className="inline-block bg-purple-dark rounded-full px-3 py-1 text-sm text-white mr-2 hover:bg-white hover:text-purple-dark border-purple-dark border-2"
               onClick={this.update}
             >
               Update
             </span>
-            Last Updated: {this.state.date}
-          </div>
-          <div className="inline-block relative">
-            <select className="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-2 py-1 pr-8 rounded leading-tight">
-              {this.state.exchanges ? (
-                this.state.exchanges.map((item, i) => (
-                  <option key={i} value={item.toLowerCase()}>
-                    {item}
-                  </option>
-                ))
-              ) : (
-                <option>Loading...</option>
-              )}
-            </select>
-            <div className="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
-              <svg
-                className="fill-current h-4 w-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
           </div>
         </div>
       </div>
