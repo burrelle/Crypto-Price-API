@@ -39,7 +39,7 @@ var req_time: number = 0;
 var active: boolean = false;
 // exchanges to fetch prices for - MUST have ccxt fetchTickers method
 const exchange_string: string[] = [
-  "binance", "bitfinex", "bittrex", /*"coinbase",*/ "kraken"
+  "binance", "bitfinex", "bittrex", "coinbase", "kraken"
 ];
 // map of ccxt exchange objects
 const exchanges: object = {};
@@ -194,7 +194,9 @@ function fetchExchangePairs(markets: object, exchange: string): Promise < any > 
   for (var exchange_pair in markets) {
     if (markets.hasOwnProperty(exchange_pair)) {
       // tslint:disable-next-line:max-line-length
-      exchangePairPromises.push(db.checkExchangePair(markets[exchange_pair].base, markets[exchange_pair].quote, markets[exchange_pair].precision.price, markets[exchange_pair].active, exchanges[exchange].name));
+      const precision:number = markets[exchange_pair].precision ? markets[exchange_pair].precision.price : null;
+      // tslint:disable-next-line:max-line-length
+      exchangePairPromises.push(db.checkExchangePair(markets[exchange_pair].base, markets[exchange_pair].quote, precision, markets[exchange_pair].active, exchanges[exchange].name));
     }
   }
   // check database includes all exchange pairs, then get
@@ -206,40 +208,86 @@ function fetchExchangePairs(markets: object, exchange: string): Promise < any > 
 
 // fetch all price values at a given exchange
 function fetchPrices(exchange: string, aggregate: object): Promise < any > {
-  return exchanges[exchange].fetchTickers().then(tickers => {
-    const pricePromises: Promise < any > [] = [];
-    for (var ticker in tickers) {
-      if (tickers.hasOwnProperty(ticker)) {
-        const tObj: Ticker = new Ticker();
-        tObj.ask = tickers[ticker].ask;
-        tObj.base = tickers[ticker].symbol.split("/")[0];
-        tObj.baseVolume = tickers[ticker].baseVolume;
-        tObj.bid = tickers[ticker].bid;
-        tObj.price = tickers[ticker].close;
-        tObj.quote = tickers[ticker].symbol.split("/")[1];
-        tObj.exchange = exchanges[exchange].name;
-        // looks like quote volume is not supported for some
-        // exchanges in ccxt?
-        // tObj.quoteVolume = tickers[ticker].quoteVolume;
-        tObj.ts = Date.now() / 1000;
-        pricePromises.push(db.checkPrice(tObj));
+  if (exchanges[exchange].has.fetchTickers) {
+    return exchanges[exchange].fetchTickers().then(tickers => {
+      const pricePromises: Promise < any > [] = [];
+      for (var ticker in tickers) {
+        if (tickers.hasOwnProperty(ticker) && exchanges[exchange].markets[tickers[ticker].symbol]) {
+          const tObj: Ticker = new Ticker();
+          tObj.ask = tickers[ticker].ask;
+          tObj.base = tickers[ticker].symbol.split("/")[0];
+          tObj.baseVolume = tickers[ticker].baseVolume;
+          tObj.bid = tickers[ticker].bid;
+          tObj.price = tickers[ticker].close;
+          tObj.quote = tickers[ticker].symbol.split("/")[1];
+          tObj.exchange = exchanges[exchange].name;
+          // looks like quote volume is not supported for some
+          // exchanges in ccxt?
+          // tObj.quoteVolume = tickers[ticker].quoteVolume;
+          tObj.ts = Date.now() / 1000;
+          pricePromises.push(db.checkPrice(tObj));
 
-        // update aggregate object with all prices
-        if (aggregate[tickers[ticker].symbol]) {
-          aggregate[tickers[ticker].symbol].push(tObj);
-        } else {
-          aggregate[tickers[ticker].symbol] = [tObj];
+          // update aggregate object with all prices
+          if (aggregate[tickers[ticker].symbol]) {
+            aggregate[tickers[ticker].symbol].push(tObj);
+          } else {
+            aggregate[tickers[ticker].symbol] = [tObj];
+          }
         }
       }
-    }
-    return Promise.all(pricePromises).then(res => {
-      logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
-    }).catch(err => {
-      logger.logError(exchange + " pricePromises", err);
+      return Promise.all(pricePromises).then(res => {
+        logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
+      }).catch(err => {
+        logger.logError(exchange + " pricePromises", err);
+      });
+    }).catch(e => {
+      logger.logError(exchange + " fetchTickers", e);
     });
-  }).catch(e => {
-    logger.logError(exchange + " fetchTickers", e);
-  });
+  } else if (exchanges[exchange].has.fetchTicker) {
+    const fetchTickerPromises: Promise<any>[] = [];
+    for (const symbol in exchanges[exchange].markets) {
+      if (exchanges[exchange].markets.hasOwnProperty(symbol)) {
+        fetchTickerPromises.push(exchanges[exchange].fetchTicker(symbol));
+      }
+    }
+    return Promise.all(fetchTickerPromises).then(tickers => {
+      const pricePromises: Promise < any > [] = [];
+      for (var ticker in tickers) {
+        if (tickers.hasOwnProperty(ticker)) {
+          const tObj: Ticker = new Ticker();
+          tObj.ask = tickers[ticker].ask;
+          tObj.base = tickers[ticker].symbol.split("/")[0];
+          tObj.baseVolume = tickers[ticker].baseVolume;
+          tObj.bid = tickers[ticker].bid;
+          tObj.price = tickers[ticker].last;
+          tObj.quote = tickers[ticker].symbol.split("/")[1];
+          tObj.exchange = exchanges[exchange].name;
+          // looks like quote volume is not supported for some
+          // exchanges in ccxt?
+          // tObj.quoteVolume = tickers[ticker].quoteVolume;
+          tObj.ts = Date.now() / 1000;
+          pricePromises.push(db.checkPrice(tObj));
+
+          // update aggregate object with all prices
+          if (aggregate[tickers[ticker].symbol]) {
+            aggregate[tickers[ticker].symbol].push(tObj);
+          } else {
+            aggregate[tickers[ticker].symbol] = [tObj];
+          }
+        }
+      }
+      return Promise.all(pricePromises).then(res => {
+        logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " fetch complete");
+      }).catch(err => {
+        logger.logError(exchange + " pricePromises", err);
+      });
+    }).catch(e => {
+      logger.logError(exchange + " fetchTickers", e);
+    });
+  } else {
+    logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s " + exchange + " prices cannot be fetched");
+  }
+
 }
 
 // add aggregate prices to database

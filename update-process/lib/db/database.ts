@@ -85,7 +85,7 @@ export function checkExchangeSimple(exchange: Exchange, exchange_details: string
   });
 }
 
-export function checkPrice(priceObj: Ticker, ): Promise < any > {
+export function checkPrice(priceObj: Ticker): Promise < any > {
   // tslint:disable-next-line:max-line-length
   const table_name: string = "prices." + priceObj.exchange.toLowerCase() + "_" +  priceObj.base.toLowerCase() + "_" + priceObj.quote.toLowerCase();
   return pool.connect()
@@ -116,7 +116,6 @@ export function checkPrice(priceObj: Ticker, ): Promise < any > {
           logger.logError("checkPrice INSERT query", e);
         });
       }).catch(e => {
-        console.log(table_name);
         client.release();
         logger.logError("checkPrice CREATE query", e);
       });
