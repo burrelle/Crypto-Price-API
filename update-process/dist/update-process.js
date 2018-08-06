@@ -1,4 +1,5 @@
 "use strict";
+/* tslint:disable:no-string-literal */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -33,8 +34,6 @@ const exchange_string = [
 ];
 // map of ccxt exchange objects
 const exchanges = {};
-// map of reorganized market data
-const market_details = new market_details_1.MarketDetails();
 // generate exchange objects
 for (const exchange of exchange_string) {
     exchanges[exchange] = new ccxt[exchange]();
@@ -52,7 +51,7 @@ process.on("SIGINT", _ => {
  * Main process
  *******************************************************/
 // get price data every two minutes on the minute
-timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */, update_time).subscribe(res => {
+timer_1.timer(0 /* use 0 here for testing if you want it to start immediately, else use start_time */, update_time).subscribe(res => {
     // do not fetch new data if previous request is still pending
     if (active) {
         logger.logInfo("ts: " + req_time + " not fetching prices because previous operation ongoing");
@@ -63,21 +62,30 @@ timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */
         logger.logInfo("ts: " + req_time + " fetching prices for: " + exchange_string);
         active = true;
         var counter = 0;
-        // make sure database structure includes all assets, pairs, exchanges, exchange pair
-        const updatePromises = [];
+        // make sure database structure includes all assets, pairs, exchanges,
+        // exchange pair
+        const marketPromises = [];
         for (const exchange of exchange_string) {
-            updatePromises.push(updateStructure(exchange, market_details));
+            marketPromises.push(fetchMarkets(exchange));
         }
-        // fetch prices
-        Promise.all(updatePromises).then(_ => {
-            const aggregate = {};
-            const pricePromises = [];
-            for (const exchange of exchange_string) {
-                pricePromises.push(updatePrices(exchange, aggregate));
+        Promise.all(marketPromises).then(res => {
+            // map of reorganized market data
+            const market_details = processMarkets(res);
+            const updatePromises = [];
+            for (const [index, exchange] of exchange_string.entries()) {
+                updatePromises.push(updateStructure(exchange, res[index], market_details));
             }
-            Promise.all(pricePromises).then(_ => {
-                updateAggregate(aggregate).then(_ => {
-                    active = false;
+            // fetch prices
+            Promise.all(updatePromises).then(_ => {
+                const aggregate = {};
+                const pricePromises = [];
+                for (const exchange of exchange_string) {
+                    pricePromises.push(updatePrices(exchange, aggregate));
+                }
+                Promise.all(pricePromises).then(_ => {
+                    updateAggregate(aggregate, market_details).then(_ => {
+                        active = false;
+                    });
                 });
             });
         });
@@ -86,10 +94,9 @@ timer_1.timer(0 /* use 0 here for testing if you want it to start immediately */
 /********************************************************
  * Core update function
  *******************************************************/
-function updateStructure(exchange, market_details) {
+function updateStructure(exchange, markets, market_details) {
     return __awaiter(this, void 0, void 0, function* () {
-        var markets = yield fetchMarkets(exchange);
-        yield fetchAssets(markets, exchange);
+        yield fetchAssets(markets, exchange, market_details);
         yield fetchExchangeAndFetchPairs(markets, exchange, market_details);
         yield fetchExchangePairs(markets, exchange);
     });
@@ -101,7 +108,7 @@ function updatePrices(exchange, aggregate) {
     });
 }
 /********************************************************
- * Fetch functions
+ * Update database functions
  *******************************************************/
 function fetchMarkets(exchange) {
     // load the markets for the given exchange
@@ -111,7 +118,7 @@ function fetchMarkets(exchange) {
         logger.logError(exchange + " loadMarkets", err);
     });
 }
-function fetchAssets(markets, exchange) {
+function fetchAssets(markets, exchange, market_details) {
     const assetPromises = [];
     const asset_set = new Set();
     // iterate over each market for the exchange
@@ -119,12 +126,14 @@ function fetchAssets(markets, exchange) {
         if (markets.hasOwnProperty(exchange_pair)) {
             // if base asset hasn't been checked, add it to check list
             if (!asset_set.has(markets[exchange_pair].base)) {
-                assetPromises.push(db.checkAsset(markets[exchange_pair].base));
+                // tslint:disable-next-line:max-line-length
+                assetPromises.push(db.checkAsset(markets[exchange_pair].base, Array.from(market_details.asset_details[markets[exchange_pair].base])));
             }
             asset_set.add(markets[exchange_pair].base);
             // if quote asset hasn't been checked, add it to check list
             if (!asset_set.has(markets[exchange_pair].quote)) {
-                assetPromises.push(db.checkAsset(markets[exchange_pair].quote));
+                // tslint:disable-next-line:max-line-length
+                assetPromises.push(db.checkAsset(markets[exchange_pair].quote, Array.from(market_details.asset_details[markets[exchange_pair].quote])));
             }
             asset_set.add(markets[exchange_pair].quote);
         }
@@ -140,7 +149,10 @@ function fetchExchangeAndFetchPairs(markets, exchange, market_details) {
     const pairPromises = [];
     for (var exchange_pair in markets) {
         if (markets.hasOwnProperty(exchange_pair)) {
-            pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote, market_details));
+            if (exchange_pair.includes("/")) {
+                // tslint:disable-next-line:max-line-length
+                pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote, Array.from(market_details.pair_details[exchange_pair])));
+            }
         }
     }
     const eObj = new exchange_1.Exchange();
@@ -148,7 +160,8 @@ function fetchExchangeAndFetchPairs(markets, exchange, market_details) {
     eObj.name = exchanges[exchange].name;
     eObj.exchange_url = exchanges[exchange].urls.www;
     // also verify exchange is included in database
-    const exchangePromise = db.checkExchange(eObj);
+    // tslint:disable-next-line:max-line-length
+    const exchangePromise = db.checkExchange(eObj, Array.from(market_details.exchange_details[exchanges[exchange].name]));
     pairPromises.push(exchangePromise);
     // check database includes all asset pairs, then check all exchange asset pairs
     return Promise.all(pairPromises).then(_ => { }).catch(err => {
@@ -209,13 +222,12 @@ function fetchPrices(exchange, aggregate) {
     });
 }
 // add aggregate prices to database
-function updateAggregate(aggregate) {
+function updateAggregate(aggregate, market_details) {
     return __awaiter(this, void 0, void 0, function* () {
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const agg_exchange = new exchange_1.Exchange();
-        agg_exchange.name = "AGGREGATE";
+        agg_exchange.name = "Aggregate";
         // create aggregate exchange in database
-        yield db.checkExchangeSimple(agg_exchange);
+        yield db.checkExchangeSimple(agg_exchange, Array.from(market_details.exchange_details["Aggregate"]));
         const aggPairPromises = [];
         // add aggregate exchange pairs
         for (let pair in aggregate) {
@@ -252,5 +264,40 @@ function updateAggregate(aggregate) {
         yield Promise.all(aggPricePromises);
         logger.logInfo("+" + (Math.round(Date.now() / 1000) - req_time) + "s aggregate fetch complete");
     });
+}
+/********************************************************
+ * Reorganize data functions
+ *******************************************************/
+function processMarkets(markets) {
+    const market_details = new market_details_1.MarketDetails();
+    market_details.exchange_details = { "Aggregate": new Set() };
+    market_details.pair_details = {};
+    market_details.asset_details = {};
+    for (const [index, market] of markets.entries()) {
+        market_details.exchange_details[exchanges[exchange_string[index]].name] = new Set();
+        for (const exchange_pair in market) {
+            if (market.hasOwnProperty(exchange_pair)) {
+                if (exchange_pair.includes("/")) {
+                    market_details.exchange_details[exchanges[exchange_string[index]].name].add(exchange_pair);
+                    market_details.exchange_details["Aggregate"].add(exchange_pair);
+                    if (!market_details.pair_details[exchange_pair]) {
+                        market_details.pair_details[exchange_pair] = new Set();
+                        // probably don't want "aggregate" to show up in list of exchanges
+                        // market_details.pair_details[exchange_pair].add("aggregate");
+                    }
+                    market_details.pair_details[exchange_pair].add(exchanges[exchange_string[index]].name);
+                    if (!market_details.asset_details[market[exchange_pair].base]) {
+                        market_details.asset_details[market[exchange_pair].base] = new Set();
+                    }
+                    if (!market_details.asset_details[market[exchange_pair].quote]) {
+                        market_details.asset_details[market[exchange_pair].quote] = new Set();
+                    }
+                    market_details.asset_details[market[exchange_pair].base].add(exchanges[exchange_string[index]].name);
+                    market_details.asset_details[market[exchange_pair].quote].add(exchanges[exchange_string[index]].name);
+                }
+            }
+        }
+    }
+    return market_details;
 }
 //# sourceMappingURL=update-process.js.map

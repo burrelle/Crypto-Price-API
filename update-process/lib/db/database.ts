@@ -24,15 +24,16 @@ export const pool: Pool = new Pool({
     port: 5432
 });
 
-export function checkAsset(ticker: string): Promise < any > {
+export function checkAsset(ticker: string, asset_details: string[]): Promise < any > {
   if (assets[ticker]) {
     // tslint:disable-next-line:max-line-length
-    return pool.query("INSERT INTO assets (asset_ticker, asset_name, asset_website, asset_total_supply) VALUES ($1, $2, $3, $4) ON CONFLICT (asset_ticker) DO UPDATE SET asset_name = $2, asset_website=$3, asset_total_supply=$4", [ticker, assets[ticker].name, assets[ticker].website_url, assets[ticker].total_supply])
+    return pool.query("INSERT INTO assets (asset_ticker, asset_name, asset_website, asset_total_supply, exchanges) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (asset_ticker) DO UPDATE SET asset_name = $2, asset_website=$3, asset_total_supply=$4, exchanges=$5", [ticker, assets[ticker].name, assets[ticker].website_url, assets[ticker].total_supply, asset_details])
     .catch(e => {
       logger.logError("checkAsset query", e);
     });
   } else {
-    return pool.query("INSERT INTO assets (asset_ticker) VALUES ($1) ON CONFLICT (asset_ticker) DO NOTHING", [ticker])
+    // tslint:disable-next-line:max-line-length
+    return pool.query("INSERT INTO assets (asset_ticker, exchanges) VALUES ($1, $2) ON CONFLICT (asset_ticker) DO UPDATE SET exchanges = $2", [ticker, asset_details])
     .catch(e => {
       logger.logError("checkAsset query", e);
     });
@@ -40,9 +41,9 @@ export function checkAsset(ticker: string): Promise < any > {
 
 }
 
-export function checkPair(base: string, quote: string, market_details: MarketDetails): Promise < any > {
+export function checkPair(base: string, quote: string, pair_details: string[]): Promise < any > {
   // tslint:disable-next-line:max-line-length
-  return pool.query("INSERT INTO pairs (base_id, quote_id) SELECT (SELECT asset_id FROM assets WHERE asset_ticker = $1), (SELECT asset_id FROM assets WHERE asset_ticker = $2) ON CONFLICT (base_id, quote_id) DO NOTHING", [base, quote])
+  return pool.query("INSERT INTO pairs (base_id, quote_id, exchanges, base, quote) SELECT (SELECT asset_id FROM assets WHERE asset_ticker = $1), (SELECT asset_id FROM assets WHERE asset_ticker = $2), $3, $1, $2 ON CONFLICT (base_id, quote_id) DO UPDATE SET exchanges = $3, base = $1, quote = $2", [base, quote, pair_details])
     .catch(e => {
       logger.logError("checkPair query", e);
     });
@@ -66,19 +67,19 @@ export function checkExchangePairSimple(base: string, quote: string, exchange: s
 }
 
 
-export function checkExchange(exchange: Exchange): Promise < any > {
+export function checkExchange(exchange: Exchange, exchange_details: string[]): Promise < any > {
   return pool.query(
     // tslint:disable-next-line:max-line-length
-    "INSERT INTO exchanges (exchange_name, countries, exchange_url) VALUES ($1, $2, $3) ON CONFLICT (exchange_name) DO UPDATE SET exchange_name = $1, countries = $2, exchange_url = $3", [exchange.name, exchange.countries, exchange.exchange_url]
+    "INSERT INTO exchanges (exchange_name, countries, exchange_url, pairs) VALUES ($1, $2, $3, $4) ON CONFLICT (exchange_name) DO UPDATE SET exchange_name = $1, countries = $2, exchange_url = $3, pairs = $4", [exchange.name, exchange.countries, exchange.exchange_url, exchange_details]
   ).catch(e => {
     logger.logError("checkExchange query", e);
   });
 }
 
-export function checkExchangeSimple(exchange: Exchange): Promise < any > {
+export function checkExchangeSimple(exchange: Exchange, exchange_details: string[]): Promise < any > {
   return pool.query(
     // tslint:disable-next-line:max-line-length
-    "INSERT INTO exchanges (exchange_name) VALUES ($1) ON CONFLICT (exchange_name) DO UPDATE SET exchange_name = $1", [exchange.name]
+    "INSERT INTO exchanges (exchange_name, pairs) VALUES ($1, $2) ON CONFLICT (exchange_name) DO UPDATE SET exchange_name = $1, pairs = $2", [exchange.name, exchange_details]
   ).catch(e => {
     logger.logError("checkExchange query", e);
   });

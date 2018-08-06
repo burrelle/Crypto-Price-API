@@ -23,6 +23,8 @@ CREATE TABLE pairs (
     base_id int NOT NULL,
     -- quote currency - references asset_id
     quote_id int NOT NULL,
+    base text,
+    quote text,
     exchanges text[],
     UNIQUE(base_id, quote_id)
 );
@@ -34,7 +36,8 @@ CREATE TABLE assets (
     asset_ticker text UNIQUE NOT NULL,
     asset_website text[],
     asset_circ_supply float,
-    asset_total_supply float
+    asset_total_supply float,
+    exchanges text[]
 );
 
 -- an exchange
@@ -42,6 +45,7 @@ CREATE TABLE exchanges (
     exchange_id serial PRIMARY KEY,
     exchange_name text UNIQUE NOT NULL,
     countries text[],
+    pairs text[],
     exchange_url text
 );
 
