@@ -11,6 +11,7 @@ describe("Asset Endpoints", () => {
     expect(response.body[0]).toHaveProperty("asset_website");
     expect(response.body[0]).toHaveProperty("asset_circ_supply");
     expect(response.body[0]).toHaveProperty("asset_total_supply");
+    expect(response.body[0]).toHaveProperty("exchanges");
   });
 
   it("GET /assets/:asset - Get a specific asset", async () => {
@@ -24,6 +25,7 @@ describe("Asset Endpoints", () => {
     expect(response.body).toHaveProperty("asset_website");
     expect(response.body).toHaveProperty("asset_circ_supply");
     expect(response.body).toHaveProperty("asset_total_supply");
+    expect(response.body).toHaveProperty("exchanges");
     expect(response.body.asset_ticker).toEqual(specificAsset);
   });
 
@@ -36,6 +38,7 @@ describe("Asset Endpoints", () => {
     expect(response.body[0]).toHaveProperty("asset_website");
     expect(response.body[0]).toHaveProperty("asset_circ_supply");
     expect(response.body[0]).toHaveProperty("asset_total_supply");
+    expect(response.body[0]).toHaveProperty("exchanges");
     let element = [];
     for (let index = 0; index < response.body.length; index++) {
       if (response.body[index].asset_total_supply != null)

@@ -7,7 +7,7 @@ const Content = () => {
   return (
     <div className="h-full overflow-hidden flex pt-24">
       <Sidebar />
-      <div className="h-full w-full overflow-hidden flex">
+      <div className="h-screen w-full overflow-y-auto flex">
         <div id="right" className="h-full w-full flex flex-col">
           <div className="overflow-y-auto p-4 flex-1">
             <div id="Assets">

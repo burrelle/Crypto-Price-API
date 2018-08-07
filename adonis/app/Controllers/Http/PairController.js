@@ -16,19 +16,19 @@ class PairController {
     let pairs;
 
     if(query.limit && !query.orderBy) {
-      pairs = await Database.select('pairs.pair_id', 'a.asset_ticker as base', 'b.asset_ticker as quote').from('pairs').innerJoin('assets as a', 'pairs.base_id', 'a.asset_id').innerJoin('assets as b', 'pairs.quote_id', 'b.asset_id').limit(query.limit).orderBy('pair_id')
+      pairs = await Database.select('pair_id', 'base', 'quote', 'exchanges').from('pairs').limit(query.limit).orderBy('pair_id')
     }
 
     else if(!query.limit && query.orderBy) {
-      pairs = await Database.select('pairs.pair_id', 'a.asset_ticker as base', 'b.asset_ticker as quote').from('pairs').innerJoin('assets as a', 'pairs.base_id', 'a.asset_id').innerJoin('assets as b', 'pairs.quote_id', 'b.asset_id').orderBy(query.orderBy)
+      pairs = await Database.select('pair_id', 'base', 'quote', 'exchanges').from('pairs').orderBy(query.orderBy)
     }
     
     else if(query.limit && query.orderBy){
-      pairs = await Database.select('pairs.pair_id', 'a.asset_ticker as base', 'b.asset_ticker as quote').from('pairs').innerJoin('assets as a', 'pairs.base_id', 'a.asset_id').innerJoin('assets as b', 'pairs.quote_id', 'b.asset_id').limit(query.limit).orderBy(query.orderBy)
+      pairs = await Database.select('pair_id', 'base', 'quote', 'exchanges').from('pairs').limit(query.limit).orderBy(query.orderBy)
     }
 
     else {
-      pairs = await Database.select('pairs.pair_id', 'a.asset_ticker as base', 'b.asset_ticker as quote').from('pairs').innerJoin('assets as a', 'pairs.base_id', 'a.asset_id').innerJoin('assets as b', 'pairs.quote_id', 'b.asset_id')
+      pairs = await Database.select('pair_id', 'base', 'quote', 'exchanges').from('pairs')
     }
     return response.json(pairs);
   }
@@ -51,7 +51,13 @@ class PairController {
    * Display a single pair.
    * GET pairs/:id
    */
-  async show ({ params, request, response, view }) {
+  async show ({ request, response }) {
+    const query = request.get();
+    let singlePair = await Database.select('pair_id', 'base', 'quote', 'exchanges').from('pairs').where({
+      base: query.base.toUpperCase(),
+      quote: query.quote.toUpperCase()
+    })
+    return response.json(singlePair);
   }
 
   /**

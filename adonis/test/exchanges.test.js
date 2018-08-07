@@ -10,6 +10,7 @@ describe("Exchanges Endpoints", () => {
       expect(response.body[0]).toHaveProperty("exchange_name");
       expect(response.body[0]).toHaveProperty("countries");
       expect(response.body[0]).toHaveProperty("exchange_url");
+      expect(response.body[0]).toHaveProperty("pairs");
     });
   
     it("GET /exchanges/:exchanges - Get a specific exchange", async () => {
@@ -21,6 +22,7 @@ describe("Exchanges Endpoints", () => {
       expect(response.body).toHaveProperty("exchange_name");
       expect(response.body).toHaveProperty("countries");
       expect(response.body).toHaveProperty("exchange_url");
+      expect(response.body).toHaveProperty("pairs");
       expect(response.body.exchange_name).toEqual(specificExchange);
     });
   });

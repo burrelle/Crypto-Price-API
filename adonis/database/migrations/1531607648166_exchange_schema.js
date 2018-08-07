@@ -8,6 +8,7 @@ class ExchangeSchema extends Schema {
       table.increments("exchange_id").primary();
       table.text("exchange_name").notNullable().unique();
       table.specificType("countries", "text[]");
+      table.specificType("pairs", "text[]");
       table.text("exchange_url");
     });
   }

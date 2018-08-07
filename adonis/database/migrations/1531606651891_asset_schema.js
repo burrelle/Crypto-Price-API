@@ -11,6 +11,7 @@ class AssetSchema extends Schema {
       table.specificType("asset_website", "text[]");
       table.float("asset_circ_supply");
       table.float("asset_total_supply");
+      table.specificType("exchanges", "text[]");
     });
   }
   down() {

@@ -11,7 +11,7 @@ class AssetController {
    * Show a list of all assets.
    * GET assets
    */
-  async index ({ request, response, view }) {
+  async index ({ request, response }) {
     const query = request.get();
     
     if(query.orderByTotalSupply){

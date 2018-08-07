@@ -39,7 +39,7 @@ class ExchangeController {
    * Display a single exchange.
    * GET exchanges/:id
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, response }) {
     let singleExchange = await Exchange.query().where('exchange_name', params.exchange).first();
     return response.json(singleExchange);
   }
