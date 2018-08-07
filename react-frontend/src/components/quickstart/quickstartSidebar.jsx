@@ -4,7 +4,7 @@ const QuickstartSidebar = () => {
   const languages = ["Python", "Node", "Ruby", "PHP", "Java"];
   return (
     <div id="sidebar" className="h-full flex flex-col flex-no-shrink w-1/4 ">
-      <div className="flex-grow overflow-y-auto p-4 leading-loose">
+      <div className="flex-grow overflow-y-auto p-4 leading-loose fixed">
         <div className="text-sm font-bold text-grey-darkest">Languages</div>
         {languages.map(lang => {
           return (

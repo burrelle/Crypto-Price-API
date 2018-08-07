@@ -15,18 +15,21 @@ export default {
         exchange_id: "int",
         exchange_name: "string",
         countries: "json",
-        exchange_url: "string"
+        exchange_url: "string",
+        pairs: "text[]"
     }],
     getSingleExchange: {
         exchange_id: "int",
         exchange_name: "string",
         countries: "json",
-        exchange_url: "string"
+        exchange_url: "string",
+        pairs: "text[]"
     },
     getAllPairs: [{
         pair_id: "int",
         base: "string",
-        quote: "string"
+        quote: "string",
+        exchanges: "text[]"
     }],
     getAllPrices: [{
         exchange_pair_id: "integer",

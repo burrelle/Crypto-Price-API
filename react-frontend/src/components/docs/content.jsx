@@ -45,6 +45,12 @@ const Content = () => {
                 description="Get all of the available pairs"
                 json={JsonExamples.getAllPairs}
               />
+              <Card
+                verb="GET"
+                endpoint="/pair?base={}&quote={}"
+                description="Get all of the available pairs"
+                json={JsonExamples.getAllPairs}
+              />
             </div>
             <div id="Price" />
             <Card
@@ -62,7 +68,7 @@ const Content = () => {
             <div id="Price History" />
             <Card
               verb="GET"
-              endpoint="/prices/history?exchange=&base=&price="
+              endpoint="/prices/history?exchange={}&base={}&price={}"
               description="Get all of the available price history"
               json={JsonExamples.getPriceHistory}
             />
