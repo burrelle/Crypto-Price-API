@@ -49,15 +49,18 @@ class Card extends React.Component {
             <p className="text-grey-darker text-base">
               {this.props.description}
             </p>
+            <div className="text-xs pt-3">
+              {this.props.additionalInfo}
+            </div>
           </div>
-          <div className="px-6 py-4">
+          <div className="px-6 py-2">
             <span
               className="inline-block bg-purple-dark rounded-full px-3 py-1 text-sm text-white mr-2 hover:bg-white hover:text-purple-dark border-purple-dark border-2"
               onClick={this.handleToggleClick}
             >
               {this.state.showExample ? "Hide" : "Sample Response"}
             </span>
-            <a href="#">
+            <a href={this.props.liveLink}>
               <span className="inline-block bg-green-dark rounded-full px-3 py-1 text-sm text-white mr-2 hover:bg-white hover:text-green-dark border-green-dark border-2">
                 Go Live
               </span>
