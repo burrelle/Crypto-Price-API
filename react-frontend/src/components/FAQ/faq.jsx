@@ -14,6 +14,9 @@ const Faq = () => {
           <Question question="What is an API?" answer="In computer programming, an application programming interface is a set of subroutine definitions, protocols, and tools for building software. In general terms, it is a set of clearly defined methods of communication between various components." />
           <Question question="What is AdonisJS?" answer="AdonisJs is a Node.js web framework with a breath of fresh air and drizzle of elegant syntax on top of it." />
           <Question question="What is Typescript?" answer="TypeScript is an open-source programming language developed and maintained by Microsoft. It is a strict syntactical superset of JavaScript, and adds optional static typing to the language." />
+          <Question question="How do I access the API?" answer="An example of how to make a GET request through common languages are shown in the quickstart portion of our documentation." />
+          <Question question="Does the API require an access token?" answer="No! This API is free to use and does not require any access tokens. Please do not overload our API!" />
+          <Question question="Why is the API responding with 404 Not Found?" answer="You are most likely inputting the incorrect API endpoint, please double-check your request." />
         </div>
       </div>
     </div>
