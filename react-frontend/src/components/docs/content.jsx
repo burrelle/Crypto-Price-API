@@ -4,19 +4,17 @@ import Sidebar from "./sidebar";
 import JsonExamples from "../../utils/JsonExamples.js";
 
 const Content = () => {
+  const baseURL = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api"
   return (
     <div className="h-full overflow-hidden flex pt-24">
       <Sidebar />
       <div className="h-screen w-full overflow-y-auto flex">
         <div id="right" className="h-full w-full flex flex-col">
           <div className="overflow-y-auto p-4 flex-1">
-            <div class="w-auto text-grey-darker items-center p-4">
-              <span class="text-lg font-bold pb-4">
-                  API URL
+            <div class="w-auto text-grey-darker text-center p-4 mb-8">
+              <span class="text-lg font-bold">
+                  API URL: {baseURL}
               </span>
-              <p class="leading-tight">
-                  The API can be accessed with the URL: ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/
-              </p>
             </div>
             <div id="Assets">
               <Card
@@ -24,7 +22,7 @@ const Content = () => {
                 endpoint="/assets"
                 description="Get all of the available assets"
                 json={JsonExamples.getAllAssets}
-                liveLink = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/assets"
+                liveLink = { baseURL + '/assets' }
               />
               <Card
                 verb="GET"
@@ -32,7 +30,7 @@ const Content = () => {
                 description="Get information about a specific asset"
                 json={JsonExamples.getSingleAsset}
                 additionalInfo = "Live link leads to asset Cardano with ticker 'ADA'."
-                liveLink = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/assets/ADA"
+                liveLink = { baseURL + '/assets/ADA'}
               />
             </div>
             <div id="Exchanges">
@@ -41,7 +39,7 @@ const Content = () => {
                 endpoint="/exchanges"
                 description="Get all of the available exchanges"
                 json={JsonExamples.getAllExchanges}
-                liveLink = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/exchanges"
+                liveLink = { baseURL + '/exchanges'}
               />
               <Card
                 verb="GET"
@@ -49,7 +47,7 @@ const Content = () => {
                 description="Get information about a specific exchange"
                 json={JsonExamples.getSingleExchange}
                 additionalInfo = "Live link leads to asset the exchange 'AGGREGATE'"
-                liveLink = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/exchanges/AGGREGATE"
+                liveLink = { baseURL + '/exchanges/AGGREGATE'}
               />
             </div>
             <div id="Pairs">
@@ -58,7 +56,7 @@ const Content = () => {
                 endpoint="/pairs"
                 description="Get all of the available pairs"
                 json={JsonExamples.getAllPairs}
-                liveLink = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/pairs"
+                liveLink = { baseURL + '/pairs'}
               />
               <Card
                 verb="GET"
@@ -75,7 +73,7 @@ const Content = () => {
               endpoint="/prices/all"
               description="Get all of the available prices"
               json={JsonExamples.getAllPrices}
-              liveLink = "http://ec2-52-89-90-170.us-west-2.compute.amazonaws.com/api/prices/all"
+              liveLink = { baseURL + '/prices/all' }
             />
             <Card
               verb="GET"

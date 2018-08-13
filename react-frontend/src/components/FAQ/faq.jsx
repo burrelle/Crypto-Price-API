@@ -3,7 +3,7 @@ import Question from "./question";
 
 const Faq = () => {
   return (
-    <div className="mt-32">
+    <div className="mt-32 py-4">
       <div className="flex justify-center flex-col">
         <div className="flex-col text-center text-3xl font-semibold">
           FAQ
