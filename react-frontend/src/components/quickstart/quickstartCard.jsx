@@ -38,7 +38,8 @@ class QuickstartCard extends React.Component {
 }
 
 QuickstartCard.propTypes = {
-  language: PropTypes.string
+  language: PropTypes.string,
+  tutorial: PropTypes.any.isRequired
 };
 
 export default QuickstartCard;

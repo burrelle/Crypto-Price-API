@@ -3,13 +3,9 @@ import axios from "axios";
 import ReactChartkick, { LineChart } from "react-chartkick";
 import Chart from "chart.js";
 import moment from "moment";
+import PropTypes from "prop-types";
 
-const url =
-  "http://localhost:3333/api/prices/history?exchange=binance&base=btc&quote=usdt";
 ReactChartkick.addAdapter(Chart);
-const exchange = "binance";
-const base = "btc";
-const quote = "usdt";
 
 class Charts extends React.Component {
   constructor(props) {
@@ -94,6 +90,12 @@ class Charts extends React.Component {
       </div>
     );
   }
+}
+
+Charts.propTypes = {
+  exchange: PropTypes.string,
+  base: PropTypes.string, 
+  quote: PropTypes.string
 }
 
 export default Charts;

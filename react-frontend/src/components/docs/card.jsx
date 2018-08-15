@@ -78,7 +78,9 @@ Card.propTypes = {
   verb: PropTypes.string,
   endpoint: PropTypes.string,
   description: PropTypes.string,
-  json: PropTypes.any.isRequired
+  json: PropTypes.any.isRequired,
+  additionalInfo: PropTypes.any,
+  liveLink: PropTypes.string
 };
 
 export default Card;
