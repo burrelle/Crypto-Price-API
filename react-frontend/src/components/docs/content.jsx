@@ -4,7 +4,7 @@ import Sidebar from "./sidebar";
 import JsonExamples from "../../utils/JsonExamples.js";
 
 const Content = () => {
-  const baseURL = "http://localhost:3333/api";
+  const baseURL = "http://ec2-52-40-20-31.us-west-2.compute.amazonaws.com/api";
   return (
     <div className="h-full overflow-hidden flex pt-24">
       <Sidebar />

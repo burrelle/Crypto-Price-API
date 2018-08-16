@@ -23,7 +23,7 @@ class Charts extends React.Component {
 
   async getPrices() {
     const url =
-      "http://localhost:3333/api/prices/history?exchange=" +
+      "http://ec2-52-40-20-31.us-west-2.compute.amazonaws.com/api/prices/history?exchange=" +
       this.props.exchange +
       "&base=" +
       this.props.base +
