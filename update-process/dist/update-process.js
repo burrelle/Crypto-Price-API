@@ -193,7 +193,6 @@ function fetchPrices(exchange, aggregate) {
             const pricePromises = [];
             for (var ticker in tickers) {
                 if (tickers.hasOwnProperty(ticker) && exchanges[exchange].markets[tickers[ticker].symbol]) {
-                    console.log("here");
                     const tObj = new ticker_1.Ticker();
                     tObj.ask = tickers[ticker].ask;
                     tObj.base = tickers[ticker].symbol.split("/")[0];
