@@ -22,7 +22,7 @@ const asset_map_1 = require("./models/asset_map");
  * Setup
  *******************************************************/
 // time between data updates (in milliseconds)
-const update_time = 120 * 1000;
+const update_time = 300 * 1000;
 // allows updates to start on even two minute intervals
 const start_time = update_time - Date.now() % update_time;
 // the time the update was started
@@ -52,7 +52,7 @@ process.on("SIGINT", _ => {
  * Main process
  *******************************************************/
 // get price data every two minutes on the minute
-timer_1.timer(0 /* use 0 here for testing if you want it to start immediately, else use start_time */, update_time).subscribe(res => {
+timer_1.timer(0, update_time).subscribe(res => {
     // do not fetch new data if previous request is still pending
     if (active) {
         logger.logInfo("ts: " + req_time + " not fetching prices because previous operation ongoing");

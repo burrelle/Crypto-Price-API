@@ -67,7 +67,7 @@ process.on("SIGINT", _ => {
  *******************************************************/
 
 // get price data every two minutes on the minute
-timer(start_time, update_time).subscribe(res => {
+timer(0, update_time).subscribe(res => {
 
   // do not fetch new data if previous request is still pending
   if (active) {

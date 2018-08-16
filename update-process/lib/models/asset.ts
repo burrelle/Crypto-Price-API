@@ -2710,5 +2710,37 @@ export const assets: object = {
         website_url: ["https://www.auctus.org/"],
         circ_supply: null,
         total_supply: 65829658
+    },
+    XRA: {
+        ticker: "XRA",
+        name: "Ratecoin",
+        img_url: null,
+        website_url: ["https://stakeminers.com/ratecoin/ratecoin.html"],
+        circ_supply: null,
+        total_supply: null
+    },
+    RVN: {
+        ticker: "RVN",
+        name: "Ravencoin",
+        img_url: null,
+        website_url: ["https://www.ravencoin.org/"],
+        circ_supply: null,
+        total_supply: 21000000000
+    },
+    MAN: {
+        ticker: "MAN",
+        name: "Matrix AI Network",
+        img_url: null,
+        website_url: ["https://www.matrixchain.io/"],
+        circ_supply: null,
+        total_supply: 250000000
+    },
+    ABS: {
+        ticker: "ABS",
+        name: "The Abyss",
+        img_url: null,
+        website_url: ["https://www.theabyss.com/"],
+        circ_supply: null,
+        total_supply: 508628132
     }
 };
