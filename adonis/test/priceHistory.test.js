@@ -1,5 +1,5 @@
 const supertest = require("supertest");
-const api = supertest("http://0.0.0.0:3333/api");
+const api = supertest("http://ec2-52-40-20-31.us-west-2.compute.amazonaws.com/api");
 
 describe("Price History Endpoints", () => {
   it("GET /assets - Get all assets", async () => {
