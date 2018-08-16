@@ -2566,5 +2566,149 @@ export const assets: object = {
         website_url: ["https://www.medicalchain.com/en/"],
         circ_supply: null,
         total_supply: 500000000
+    },
+    RRT: {
+        ticker: "RRT",
+        name: "Recovery Right Tokens",
+        img_url: null,
+        website_url: ["https://www.bitfinex.com"],
+        circ_supply: null,
+        total_supply: null
+    },
+    UTK: {
+        ticker: "UTK",
+        name: "UTRUST",
+        img_url: null,
+        website_url: ["https://www.utrust.com/"],
+        circ_supply: null,
+        total_supply: 500000000
+    },
+    CTXC: {
+        ticker: "CTXC",
+        name: "Cortex",
+        img_url: null,
+        website_url: ["http://www.cortexlabs.ai/"],
+        circ_supply: null,
+        total_supply: 299792458
+    },
+    AIO: {
+        ticker: "AIO",
+        name: "?",
+        img_url: null,
+        website_url: ["?"],
+        circ_supply: null,
+        total_supply: null
+    },
+    ATM: {
+        ticker: "ATM",
+        name: "ATMChain",
+        img_url: null,
+        website_url: ["https://www.atmchain.io/"],
+        circ_supply: null,
+        total_supply: 10000000000
+    },
+    BQX: {
+        ticker: "BQX",
+        name: "Bitquence",
+        img_url: null,
+        website_url: ["?"],
+        circ_supply: null,
+        total_supply: null
+    },
+    SEN: {
+        ticker: "SEN",
+        name: "Consensus",
+        img_url: null,
+        website_url: ["https://www.consensus.ai/"],
+        circ_supply: null,
+        total_supply: 1650000000
+    },
+    LYM: {
+        ticker: "LYM",
+        name: "Lympo",
+        img_url: null,
+        website_url: ["https://www.lympo.io/"],
+        circ_supply: null,
+        total_supply: 999999999
+    },
+    ORS: {
+        ticker: "ORS",
+        name: "ORS Group",
+        img_url: null,
+        website_url: ["https://www.orsgroup.io/"],
+        circ_supply: null,
+        total_supply: 557670520
+    },
+    CBT: {
+        ticker: "CBT",
+        name: "CommerceBlock",
+        img_url: null,
+        website_url: ["https://www.commerceblock.com/"],
+        circ_supply: null,
+        total_supply: 743256686
+    },
+    ESS: {
+        ticker: "ESS",
+        name: "Essentia",
+        img_url: null,
+        website_url: ["https://essentia.one/"],
+        circ_supply: null,
+        total_supply: 1755313373
+    },
+    DTA: {
+        ticker: "DTA",
+        name: "DATA",
+        img_url: null,
+        website_url: ["https://data.eco/"],
+        circ_supply: null,
+        total_supply: 11500000000
+    },
+    SEE: {
+        ticker: "SEE",
+        name: "SEER",
+        img_url: null,
+        website_url: ["https://seer.best/"],
+        circ_supply: null,
+        total_supply: 4100000000
+    },
+    FSN: {
+        ticker: "FSN",
+        name: "Fusion",
+        img_url: null,
+        website_url: ["https://www.fusion.org/"],
+        circ_supply: null,
+        total_supply: 57344000
+    },
+    DAD: {
+        ticker: "DAD",
+        name: "DADI",
+        img_url: null,
+        website_url: ["https://dadi.cloud/"],
+        circ_supply: null,
+        total_supply: 100000000
+    },
+    ZCN: {
+        ticker: "ZCN",
+        name: "0Chain",
+        img_url: null,
+        website_url: ["https://www.0chain.net/"],
+        circ_supply: null,
+        total_supply: 400000000
+    },
+    DOCK: {
+        ticker: "DOCK",
+        name: "Dock",
+        img_url: null,
+        website_url: ["https://www.dock.io/"],
+        circ_supply: null,
+        total_supply: 1000000000
+    },
+    AUC: {
+        ticker: "AUC",
+        name: "Auctus",
+        img_url: null,
+        website_url: ["https://www.auctus.org/"],
+        circ_supply: null,
+        total_supply: 65829658
     }
 };
