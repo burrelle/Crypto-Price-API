@@ -13,6 +13,9 @@ import {
 import * as logger from "../logger/logger";
 import { assets } from "../models/asset";
 import { MarketDetails } from "../models/market_details";
+import {
+  asset_map
+} from "../models/asset_map";
 
 require("dotenv").config();
 
@@ -24,7 +27,8 @@ export const pool: Pool = new Pool({
     port: 5432
 });
 
-export function checkAsset(ticker: string, asset_details: string[]): Promise < any > {
+export function checkAsset(ticker: string, asset_details: string[], exchange: string): Promise < any > {
+  ticker = getTicker(ticker, exchange.toLowerCase());
   if (assets[ticker]) {
     // tslint:disable-next-line:max-line-length
     return pool.query("INSERT INTO assets (asset_ticker, asset_name, asset_website, asset_total_supply, exchanges) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (asset_ticker) DO UPDATE SET asset_name = $2, asset_website=$3, asset_total_supply=$4, exchanges=$5", [ticker, assets[ticker].name, assets[ticker].website_url, assets[ticker].total_supply, asset_details])
@@ -41,7 +45,9 @@ export function checkAsset(ticker: string, asset_details: string[]): Promise < a
 
 }
 
-export function checkPair(base: string, quote: string, pair_details: string[]): Promise < any > {
+export function checkPair(base: string, quote: string, pair_details: string[], exchange: string): Promise < any > {
+  base = getTicker(base, exchange.toLowerCase());
+  quote = getTicker(quote, exchange.toLowerCase());
   // tslint:disable-next-line:max-line-length
   return pool.query("INSERT INTO pairs (base_id, quote_id, exchanges, base, quote) SELECT (SELECT asset_id FROM assets WHERE asset_ticker = $1), (SELECT asset_id FROM assets WHERE asset_ticker = $2), $3, $1, $2 ON CONFLICT (base_id, quote_id) DO UPDATE SET exchanges = $3, base = $1, quote = $2", [base, quote, pair_details])
     .catch(e => {
@@ -50,6 +56,8 @@ export function checkPair(base: string, quote: string, pair_details: string[]): 
 }
 
 export function checkExchangePair(base: string, quote: string, precision: number, active: boolean, exchange: string): Promise < any > {
+  base = getTicker(base, exchange.toLowerCase());
+  quote = getTicker(quote, exchange.toLowerCase());
   // tslint:disable-next-line:max-line-length
   return pool.query("INSERT INTO exchange_pairs (exchange_id, pair_id, price_precision, active) SELECT (SELECT exchange_id FROM exchanges WHERE exchange_name = $1), (SELECT p.pair_id FROM pairs p WHERE p.base_id = (SELECT asset_id FROM assets WHERE asset_ticker = $2) AND p.quote_id = (SELECT asset_id FROM assets WHERE asset_ticker = $3)), $4, $5 ON CONFLICT (exchange_id, pair_id) DO UPDATE SET price_precision = $4, active = $5", [exchange, base, quote, precision, active])
     .catch(e => {
@@ -59,6 +67,8 @@ export function checkExchangePair(base: string, quote: string, precision: number
 
 
 export function checkExchangePairSimple(base: string, quote: string, exchange: string): Promise < any > {
+  base = getTicker(base, exchange.toLowerCase());
+  quote = getTicker(quote, exchange.toLowerCase());
   // tslint:disable-next-line:max-line-length
   return pool.query("INSERT INTO exchange_pairs (exchange_id, pair_id) SELECT (SELECT exchange_id FROM exchanges WHERE exchange_name = $1), (SELECT p.pair_id FROM pairs p WHERE p.base_id = (SELECT asset_id FROM assets WHERE asset_ticker = $2) AND p.quote_id = (SELECT asset_id FROM assets WHERE asset_ticker = $3)) ON CONFLICT (exchange_id, pair_id) DO NOTHING", [exchange, base, quote])
     .catch(e => {
@@ -86,6 +96,8 @@ export function checkExchangeSimple(exchange: Exchange, exchange_details: string
 }
 
 export function checkPrice(priceObj: Ticker): Promise < any > {
+  priceObj.base = getTicker(priceObj.base, priceObj.exchange.toLowerCase());
+  priceObj.quote = getTicker(priceObj.quote, priceObj.exchange.toLowerCase());
   // tslint:disable-next-line:max-line-length
   const table_name: string = "prices." + priceObj.exchange.toLowerCase() + "_" +  priceObj.base.toLowerCase() + "_" + priceObj.quote.toLowerCase();
   return pool.connect()
@@ -124,4 +136,14 @@ export function checkPrice(priceObj: Ticker): Promise < any > {
 
 export function shutdown(): Promise < any > {
   return pool.end();
+}
+
+// function maps different tickers for same asset to same ticker in database
+function getTicker(ticker: string, exchange: string): string {
+
+  if (asset_map[exchange] && asset_map[exchange].hasOwnProperty(ticker)) {
+    return asset_map[exchange][ticker];
+  } else {
+    return ticker;
+  }
 }
