@@ -151,8 +151,8 @@ export const assets: object = {
         circ_supply: null,
         total_supply: null
     },
-    VEN: {
-        ticker: "VEN",
+    VET: {
+        ticker: "VET",
         name: "VeChain",
         img_url: null,
         website_url: ["https://www.vechain.org/"],
