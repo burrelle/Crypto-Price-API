@@ -128,13 +128,13 @@ function fetchAssets(markets, exchange, market_details) {
             // if base asset hasn't been checked, add it to check list
             if (!asset_set.has(markets[exchange_pair].base)) {
                 // tslint:disable-next-line:max-line-length
-                assetPromises.push(db.checkAsset(markets[exchange_pair].base, Array.from(market_details.asset_details[markets[exchange_pair].base])));
+                assetPromises.push(db.checkAsset(markets[exchange_pair].base, Array.from(market_details.asset_details[getTicker(markets[exchange_pair].base, exchange)]), exchange));
             }
             asset_set.add(markets[exchange_pair].base);
             // if quote asset hasn't been checked, add it to check list
             if (!asset_set.has(markets[exchange_pair].quote)) {
                 // tslint:disable-next-line:max-line-length
-                assetPromises.push(db.checkAsset(markets[exchange_pair].quote, Array.from(market_details.asset_details[markets[exchange_pair].quote])));
+                assetPromises.push(db.checkAsset(markets[exchange_pair].quote, Array.from(market_details.asset_details[getTicker(markets[exchange_pair].quote, exchange)]), exchange));
             }
             asset_set.add(markets[exchange_pair].quote);
         }
@@ -152,7 +152,7 @@ function fetchExchangeAndFetchPairs(markets, exchange, market_details) {
         if (markets.hasOwnProperty(exchange_pair)) {
             if (exchange_pair.includes("/")) {
                 // tslint:disable-next-line:max-line-length
-                pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote, Array.from(market_details.pair_details[exchange_pair])));
+                pairPromises.push(db.checkPair(markets[exchange_pair].base, markets[exchange_pair].quote, Array.from(market_details.pair_details[getSymbol(exchange_pair, exchange)]), exchange));
             }
         }
     }
@@ -193,28 +193,7 @@ function fetchPrices(exchange, aggregate) {
         return exchanges[exchange].fetchTickers().then(tickers => {
             const pricePromises = [];
             for (var ticker in tickers) {
-                // map wrong names
                 if (tickers.hasOwnProperty(ticker)) {
-                    let base = tickers[ticker].symbol.split("/")[0];
-                    let quote = tickers[ticker].symbol.split("/")[1];
-                    if (asset_map_1.asset_map[exchange] && asset_map_1.asset_map[exchange].hasOwnProperty(base)) {
-                        let mapped_val = asset_map_1.asset_map[exchange][base];
-                        let new_key = mapped_val + "/" + quote;
-                        // tslint:disable-next-line:max-line-length
-                        Object.defineProperty(tickers, new_key, Object.getOwnPropertyDescriptor(tickers, ticker));
-                        delete tickers[ticker];
-                        tickers[new_key].symbol = new_key;
-                        ticker = new_key;
-                    }
-                    if (asset_map_1.asset_map[exchange] && asset_map_1.asset_map[exchange].hasOwnProperty(quote)) {
-                        let mapped_val = asset_map_1.asset_map[exchange][quote];
-                        let new_key = base + "/" + mapped_val;
-                        // tslint:disable-next-line:max-line-length
-                        Object.defineProperty(tickers, new_key, Object.getOwnPropertyDescriptor(tickers, ticker));
-                        delete tickers[ticker];
-                        tickers[new_key].symbol = new_key;
-                        ticker = new_key;
-                    }
                     if (exchanges[exchange].markets[tickers[ticker].symbol]) {
                         const tObj = new ticker_1.Ticker();
                         tObj.ask = tickers[ticker].ask;
@@ -230,11 +209,11 @@ function fetchPrices(exchange, aggregate) {
                         tObj.ts = Date.now() / 1000;
                         pricePromises.push(db.checkPrice(tObj));
                         // update aggregate object with all prices
-                        if (aggregate[tickers[ticker].symbol]) {
-                            aggregate[tickers[ticker].symbol].push(tObj);
+                        if (aggregate[getSymbol(tickers[ticker].symbol, exchange)]) {
+                            aggregate[getSymbol(tickers[ticker].symbol, exchange)].push(tObj);
                         }
                         else {
-                            aggregate[tickers[ticker].symbol] = [tObj];
+                            aggregate[getSymbol(tickers[ticker].symbol, exchange)] = [tObj];
                         }
                     }
                 }
@@ -274,11 +253,11 @@ function fetchPrices(exchange, aggregate) {
                     tObj.ts = Date.now() / 1000;
                     pricePromises.push(db.checkPrice(tObj));
                     // update aggregate object with all prices
-                    if (aggregate[tickers[ticker].symbol]) {
-                        aggregate[tickers[ticker].symbol].push(tObj);
+                    if (aggregate[getSymbol(tickers[ticker].symbol, exchange)]) {
+                        aggregate[getSymbol(tickers[ticker].symbol, exchange)].push(tObj);
                     }
                     else {
-                        aggregate[tickers[ticker].symbol] = [tObj];
+                        aggregate[getSymbol(tickers[ticker].symbol, exchange)] = [tObj];
                     }
                 }
             }
@@ -343,33 +322,6 @@ function updateAggregate(aggregate, market_details) {
  * Reorganize data functions
  *******************************************************/
 function processMarkets(markets) {
-    // map different exchange asset tickers to universal ticker
-    for (const [index, market] of markets.entries()) {
-        for (const exchange_pair in market) {
-            if (market.hasOwnProperty(exchange_pair)) {
-                let base = exchange_pair.split("/")[0];
-                let quote = exchange_pair.split("/")[1];
-                if (asset_map_1.asset_map[exchange_string[index]] && asset_map_1.asset_map[exchange_string[index]].hasOwnProperty(base)) {
-                    let mapped_val = asset_map_1.asset_map[exchange_string[index]][base];
-                    let new_key = mapped_val + "/" + exchange_pair.split("/")[1];
-                    // tslint:disable-next-line:max-line-length
-                    Object.defineProperty(markets[index], new_key, Object.getOwnPropertyDescriptor(markets[index], exchange_pair));
-                    delete markets[index][exchange_pair];
-                    markets[index][new_key].symbol = new_key;
-                    markets[index][new_key].base = mapped_val;
-                }
-                if (asset_map_1.asset_map[exchange_string[index]] && asset_map_1.asset_map[exchange_string[index]].hasOwnProperty(quote)) {
-                    let mapped_val = asset_map_1.asset_map[exchange_string[index]][quote];
-                    let new_key = exchange_pair.split("/")[0] + "/" + mapped_val;
-                    // tslint:disable-next-line:max-line-length
-                    Object.defineProperty(markets[index], new_key, Object.getOwnPropertyDescriptor(markets[index], exchange_pair));
-                    delete markets[index][exchange_pair];
-                    markets[index][new_key].symbol = new_key;
-                    markets[index][new_key].quote = mapped_val;
-                }
-            }
-        }
-    }
     // create market detail objects
     const market_details = new market_details_1.MarketDetails();
     market_details.exchange_details = { "Aggregate": new Set() };
@@ -377,29 +329,58 @@ function processMarkets(markets) {
     market_details.asset_details = {};
     for (const [index, market] of markets.entries()) {
         market_details.exchange_details[exchanges[exchange_string[index]].name] = new Set();
-        for (const exchange_pair in market) {
+        for (let exchange_pair in market) {
             if (market.hasOwnProperty(exchange_pair)) {
                 if (exchange_pair.includes("/")) {
-                    market_details.exchange_details[exchanges[exchange_string[index]].name].add(exchange_pair);
-                    market_details.exchange_details["Aggregate"].add(exchange_pair);
-                    if (!market_details.pair_details[exchange_pair]) {
-                        market_details.pair_details[exchange_pair] = new Set();
+                    // exchange_pair = ;
+                    market_details.exchange_details[exchanges[exchange_string[index]].name].add(getSymbol(exchange_pair, exchange_string[index]));
+                    market_details.exchange_details["Aggregate"].add(getSymbol(exchange_pair, exchange_string[index]));
+                    if (!market_details.pair_details[getSymbol(exchange_pair, exchange_string[index])]) {
+                        market_details.pair_details[getSymbol(exchange_pair, exchange_string[index])] = new Set();
                         // probably don't want "aggregate" to show up in list of exchanges
                         // market_details.pair_details[exchange_pair].add("aggregate");
                     }
-                    market_details.pair_details[exchange_pair].add(exchanges[exchange_string[index]].name);
-                    if (!market_details.asset_details[market[exchange_pair].base]) {
-                        market_details.asset_details[market[exchange_pair].base] = new Set();
+                    market_details.pair_details[getSymbol(exchange_pair, exchange_string[index])].add(exchanges[exchange_string[index]].name);
+                    if (!market_details.asset_details[getTicker(market[exchange_pair].base, exchange_string[index])]) {
+                        market_details.asset_details[getTicker(market[exchange_pair].base, exchange_string[index])] = new Set();
                     }
-                    if (!market_details.asset_details[market[exchange_pair].quote]) {
-                        market_details.asset_details[market[exchange_pair].quote] = new Set();
+                    if (!market_details.asset_details[getTicker(market[exchange_pair].quote, exchange_string[index])]) {
+                        market_details.asset_details[getTicker(market[exchange_pair].quote, exchange_string[index])] = new Set();
                     }
-                    market_details.asset_details[market[exchange_pair].base].add(exchanges[exchange_string[index]].name);
-                    market_details.asset_details[market[exchange_pair].quote].add(exchanges[exchange_string[index]].name);
+                    // tslint:disable-next-line:max-line-length
+                    market_details.asset_details[getTicker(market[exchange_pair].base, exchange_string[index])].add(exchanges[exchange_string[index]].name);
+                    // tslint:disable-next-line:max-line-length
+                    market_details.asset_details[getTicker(market[exchange_pair].quote, exchange_string[index])].add(exchanges[exchange_string[index]].name);
                 }
             }
         }
     }
     return market_details;
+}
+// function maps different tickers for same asset to same ticker in database
+function getSymbol(symbol, exchange) {
+    let base = symbol.split("/")[0];
+    let quote = symbol.split("/")[1];
+    if (asset_map_1.asset_map[exchange] && asset_map_1.asset_map[exchange].hasOwnProperty(base) && asset_map_1.asset_map[exchange].hasOwnProperty(quote)) {
+        return asset_map_1.asset_map[exchange][base] + "/" + asset_map_1.asset_map[exchange][quote];
+    }
+    else if (asset_map_1.asset_map[exchange] && asset_map_1.asset_map[exchange].hasOwnProperty(base)) {
+        return asset_map_1.asset_map[exchange][base] + "/" + quote;
+    }
+    else if (asset_map_1.asset_map[exchange] && asset_map_1.asset_map[exchange].hasOwnProperty(quote)) {
+        return base + "/" + asset_map_1.asset_map[exchange][quote];
+    }
+    else {
+        return symbol;
+    }
+}
+// function maps different tickers for same asset to same ticker in database
+function getTicker(ticker, exchange) {
+    if (asset_map_1.asset_map[exchange] && asset_map_1.asset_map[exchange].hasOwnProperty(ticker)) {
+        return asset_map_1.asset_map[exchange][ticker];
+    }
+    else {
+        return ticker;
+    }
 }
 //# sourceMappingURL=update-process.js.map
