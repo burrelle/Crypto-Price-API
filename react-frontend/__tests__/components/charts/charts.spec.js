@@ -37,4 +37,10 @@ describe('Chart List Component', () => {
         );
         expect(mockAxios.get).toHaveBeenCalledTimes(4);
     }); 
+
+    test('Reducer function', () => {
+        const prices = Charts.prototype.reduceData(jsonData);
+        expect(prices.length).toBe(3);
+        expect(prices[0].toString().split(',').length).toBe(2);
+    })
 });

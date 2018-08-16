@@ -14,6 +14,13 @@ class Charts extends React.Component {
     this.update = this.update.bind(this);
   }
 
+  reduceData(data) {
+    return data.reduce((total, amount) => {
+      total.push([amount.ts, amount.price]);
+      return total;
+    }, []);
+  }
+
   async getPrices() {
     const url =
       "http://localhost:3333/api/prices/history?exchange=" +
@@ -24,10 +31,7 @@ class Charts extends React.Component {
       this.props.quote;
     const response = await axios.get(url);
     const data = response.data;
-    const prices = data.reduce((total, amount) => {
-      total.push([amount.ts, amount.price]);
-      return total;
-    }, []);
+    const prices = this.reduceData(data);
     return prices;
   }
 
