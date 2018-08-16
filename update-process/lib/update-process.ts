@@ -33,7 +33,7 @@ import {
  *******************************************************/
 
 // time between data updates (in milliseconds)
-const update_time: number = 300 * 1000;
+const update_time: number = 600 * 1000;
 // allows updates to start on even two minute intervals
 const start_time: number = update_time - Date.now() % update_time;
 // the time the update was started
@@ -67,7 +67,7 @@ process.on("SIGINT", _ => {
  *******************************************************/
 
 // get price data every two minutes on the minute
-timer(0, update_time).subscribe(res => {
+timer(start_time, update_time).subscribe(res => {
 
   // do not fetch new data if previous request is still pending
   if (active) {
