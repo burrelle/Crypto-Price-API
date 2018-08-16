@@ -10,7 +10,7 @@ ReactChartkick.addAdapter(Chart);
 class Charts extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { data: null, date: null, exchanges: null, pairs: null };
+    this.state = { data: null, date: null };
     this.update = this.update.bind(this);
   }
 
@@ -96,6 +96,6 @@ Charts.propTypes = {
   exchange: PropTypes.string,
   base: PropTypes.string, 
   quote: PropTypes.string
-}
+};
 
 export default Charts;

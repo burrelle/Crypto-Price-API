@@ -31,9 +31,11 @@
     "enzyme": "^3.4.1",
     "enzyme-adapter-react-16": "^1.2.0",
     "enzyme-to-json": "^3.3.4",
+    "faker": "^4.1.0",
     "jest": "^23.5.0",
     "parcel-bundler": "^1.9.4",
     "regenerator-runtime": "^0.12.1",
+    "sinon": "^6.1.5",
     "tailwindcss": "^0.6.1"
   },
   "scripts": {

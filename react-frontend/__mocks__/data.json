@@ -1,0 +1,31 @@
+[{
+        "price_id": "1",
+        "exchange_pair_id": 1005,
+        "price": 4.2e-7,
+        "bid": 4.2e-7,
+        "ask": 4.4e-7,
+        "basevolume": 2163458.45335109,
+        "quotevolume": null,
+        "ts": 1533591299
+    },
+    {
+        "price_id": "2",
+        "exchange_pair_id": 1005,
+        "price": 4.2e-7,
+        "bid": 4.2e-7,
+        "ask": 4.4e-7,
+        "basevolume": 2165470.82395715,
+        "quotevolume": null,
+        "ts": 1533591416
+    },
+    {
+        "price_id": "3",
+        "exchange_pair_id": 1005,
+        "price": 4.2e-7,
+        "bid": 4.2e-7,
+        "ask": 4.4e-7,
+        "basevolume": 2165470.82395715,
+        "quotevolume": null,
+        "ts": 1533591535
+    }
+]
