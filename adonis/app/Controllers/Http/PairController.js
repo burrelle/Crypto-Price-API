@@ -34,20 +34,6 @@ class PairController {
   }
 
   /**
-   * Render a form to be used for creating a new pair.
-   * GET pairs/create
-   */
-  async create ({ request, response, view }) {
-  }
-
-  /**
-   * Create/save a new pair.
-   * POST pairs
-   */
-  async store ({ request, response }) {
-  }
-
-  /**
    * Display a single pair.
    * GET pairs/:id
    */
@@ -58,27 +44,6 @@ class PairController {
       quote: query.quote.toUpperCase()
     })
     return response.json(singlePair);
-  }
-
-  /**
-   * Render a form to update an existing pair.
-   * GET pairs/:id/edit
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
-   * Update pair details.
-   * PUT or PATCH pairs/:id
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a pair with id.
-   * DELETE pairs/:id
-   */
-  async destroy ({ params, request, response }) {
   }
 }
 

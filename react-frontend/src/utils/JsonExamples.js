@@ -1,35 +1,41 @@
 export default {
     getAllAssets: [{
-        asset_id: "int",
+        asset_id: "integer",
+        asset_name: "string",
         asset_ticker: "string",
-        asset_website: "string",
-        asset_supply: "string"
+        asset_website: "array",
+        asset_circ_supply: "integer",
+        asset_total_supply: "integer",
+        exchanges: "array"
     }],
     getSingleAsset: {
-        asset_id: "int",
+        asset_id: "integer",
+        asset_name: "string",
         asset_ticker: "string",
-        asset_website: "string",
-        asset_supply: "string"
+        asset_website: "array",
+        asset_circ_supply: "integer",
+        asset_total_supply: "integer",
+        exchanges: "array"
     },
     getAllExchanges: [{
         exchange_id: "int",
         exchange_name: "string",
-        countries: "json",
-        exchange_url: "string",
-        pairs: "text[]"
+        countries: "array",
+        pairs: "array",
+        exchange_url: "string"
     }],
     getSingleExchange: {
         exchange_id: "int",
         exchange_name: "string",
-        countries: "json",
-        exchange_url: "string",
-        pairs: "text[]"
+        countries: "array",
+        pairs: "array",
+        exchange_url: "string"
     },
     getAllPairs: [{
         pair_id: "int",
         base: "string",
         quote: "string",
-        exchanges: "text[]"
+        exchanges: "array"
     }],
     getAllPrices: [{
         exchange_pair_id: "integer",

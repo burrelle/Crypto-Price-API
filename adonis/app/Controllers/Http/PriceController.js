@@ -27,20 +27,6 @@ class PriceController {
   }
 
   /**
-   * Render a form to be used for creating a new price.
-   * GET prices/create
-   */
-  async create ({ request, response, view }) {
-  }
-
-  /**
-   * Create/save a new price.
-   * POST prices
-   */
-  async store ({ request, response }) {
-  }
-
-  /**
    * Display a single price.
    * GET prices/:id
    */
@@ -56,27 +42,6 @@ class PriceController {
       .where('a.asset_ticker', query.base.toUpperCase())
       .where('b.asset_ticker', query.quote.toUpperCase())
       return response.json(price);
-  }
-
-  /**
-   * Render a form to update an existing price.
-   * GET prices/:id/edit
-   */
-  async edit ({ params, request, response, view }) {
-  }
-
-  /**
-   * Update price details.
-   * PUT or PATCH prices/:id
-   */
-  async update ({ params, request, response }) {
-  }
-
-  /**
-   * Delete a price with id.
-   * DELETE prices/:id
-   */
-  async destroy ({ params, request, response }) {
   }
 }
 
