@@ -79,6 +79,7 @@ class Charts extends React.Component {
           min={null}
           max={null}
           colors={["#794acf", "#794acf"]}
+          download={true}
         />
         <div className="flex justify-between items-center py-4 text-sm">
           <div>Last Updated: {this.state.date}</div>
