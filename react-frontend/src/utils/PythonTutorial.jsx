@@ -1,5 +1,5 @@
 import React from "react";
- const APIURL = "https://jsonplaceholder.typicode.com/posts/1";
+const APIURL = "http://ec2-52-40-20-31.us-west-2.compute.amazonaws.com/api";
  export default function Python() {
   return (
     <div className="flex">
